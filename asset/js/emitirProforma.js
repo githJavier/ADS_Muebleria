@@ -1,55 +1,52 @@
 let selectedProducts = [];
 
-// Función para mostrar u ocultar el modal
+// Mostrar u ocultar el modal
 function toggleModal() {
     const modal = document.getElementById('productModal');
     const productListBody = document.getElementById('product-list-body');
-    const productListHeader = document.getElementById('product-list-header');
 
-    // Verificamos si hay productos seleccionados
-    if (selectedProducts.length === 0) {
-        productListBody.innerHTML = '<tr><td colspan="5" class="text-center">Lista Vacía.</td></tr>';
-        productListHeader.innerHTML = '';  // Ocultar encabezado si no hay productos
+    if (productListBody.children.length === 0 && selectedProducts.length === 0) {
+        productListBody.innerHTML = '<tr><td colspan="4" class="text-center">Lista Vacía.</td></tr>';
     } else {
         updateProductList();
-        // Mostrar encabezado solo si hay productos
-        productListHeader.innerHTML = `
-            <tr>
-                <th class="p-3">Código</th>
-                <th class="p-3">Producto</th>
-                <th class="p-3">Precio</th>
-                <th class="p-3">Cantidad</th>
-            </tr>
-        `;
     }
-
     modal.classList.toggle('hidden');
 }
 
-// Función para agregar productos a la lista
+// Actualizar la cantidad de productos
+function updateQuantity(event, id, stock) {
+    const inputField = document.getElementById('quantity-' + id);
+    let currentQuantity = parseInt(inputField.value, 10) || 1;
+
+    if (event.target.classList.contains('increase') && currentQuantity < stock) {
+        inputField.value = currentQuantity + 1;
+    } else if (event.target.classList.contains('decrease') && currentQuantity > 1) {
+        inputField.value = currentQuantity - 1;
+    }
+}
+
+// Agregar productos seleccionados a la lista
 function addProductToList(event, id, code, name, price) {
     event.preventDefault();
-    const quantity = document.getElementById('quantity-' + id).value;
-    if (quantity === 'Agotado') {
-        alert('El producto está agotado.');
+    const quantity = parseInt(document.getElementById('quantity-' + id).value, 10) || 1;
+
+    if (quantity <= 0) {
+        alert('Cantidad no válida.');
         return;
     }
 
-    // Verificar si el producto ya está en la lista
     const existingProduct = selectedProducts.find(product => product.id === id);
     if (existingProduct) {
         alert('Este producto ya fue agregado.');
         return;
     }
 
-    // Agregar el producto al array temporal
     selectedProducts.push({ id, code, name, price, quantity });
-
     alert(`${name} ha sido agregado a la lista.`);
     updateProductList();
 }
 
-// Función para actualizar la lista de productos seleccionados
+// Actualizar la lista visual de productos seleccionados
 function updateProductList() {
     const productListBody = document.getElementById('product-list-body');
     productListBody.innerHTML = '';
@@ -66,20 +63,21 @@ function updateProductList() {
     });
 }
 
-// Función para descartar la lista de productos
+// Descartar la lista de productos seleccionados
 function discardList() {
     selectedProducts = [];
     updateProductList();
     toggleModal();
 }
 
-// Función para generar la proforma
-function generateProforma() {
+// Generar proforma al enviar el formulario
+document.getElementById('proformaForm').addEventListener('submit', function (event) {
     if (selectedProducts.length === 0) {
+        event.preventDefault();
         alert('No hay productos seleccionados.');
         return;
     }
 
-    // Aquí puedes agregar la lógica para generar la proforma (enviar los productos al servidor)
-    alert('Proforma generada con éxito.');
-}
+    const selectedProductsInput = document.getElementById('selectedProductsInput');
+    selectedProductsInput.value = JSON.stringify(selectedProducts);
+});

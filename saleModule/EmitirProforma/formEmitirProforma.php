@@ -34,12 +34,13 @@ class formEmitirProforma {
                         <!-- Espaciado para evitar solapamiento con la barra fija -->
                         <div class="mt-24 flex justify-between gap-8">
                             <!-- Contenedor para el input de búsqueda y botón de búsqueda pegado a la izquierda -->
-                            <form id="searchForm" method="POST" class="flex gap-4 items-center w-full">
-                                <div>
-                                    <input type="text" id="search-input" class="p-3 border rounded-md w-1/2" placeholder="Buscar producto...">
-                                    <button class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition" name="btnBuscarProducto">Buscar</button>
+                            <form action="getProforma.php" method="POST">
+                                <div class="flex gap-4 items-center w-full">
+                                    <input type="text" id="search-input" class="p-3 border rounded-md w-1/2" name="txtBuscarProducto" placeholder="Buscar producto...">
+                                    <button class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition" type="submit" name="btnBuscarProducto">Buscar</button>
                                 </div>
                             </form>
+
                             <!-- Botones para acciones alineados a la derecha -->
                             <div class="flex gap-4 justify-end w-full">
                                 <button onclick="toggleModal()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition">Productos Seleccionados</button>
@@ -62,11 +63,17 @@ class formEmitirProforma {
 
                 <!-- Modal para ver la lista de productos seleccionados -->
                 <div id="productModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-20 hidden">
+                <form id="proformaForm" method="post" action="getProforma.php">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
                         <h3 class="text-xl font-bold mb-4 text-center">Lista de Productos Seleccionados</h3>
                         <table border="1" id="product-list" class="w-full mb-4 text-center border border-gray-300">
-                            <thead id="product-list-header">
-                                <!-- El encabezado solo se mostrará si hay productos -->
+                            <thead>
+                                <tr>
+                                    <th class="p-3">Código</th>
+                                    <th class="p-3">Producto</th>
+                                    <th class="p-3">Precio</th>
+                                    <th class="p-3">Cantidad</th>
+                                </tr>
                             </thead>
                             <tbody id="product-list-body">
                                 <!-- Aquí se mostrarán los productos seleccionados -->
@@ -74,13 +81,16 @@ class formEmitirProforma {
                         </table>
                         <!-- Botones dentro del modal -->
                         <div class="flex gap-4 mt-4 justify-between">
-                            <button onclick="discardList()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2">Descartar Lista</button>
-                            <button onclick="generateProforma()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2">Generar Proforma</button>
+                            <button type="button" onclick="discardList()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2">Descartar Lista</button>
+                            <button type="submit" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2" name="btnGenerarProforma">Generar Proforma</button>
                         </div>
-                        
-                        <!-- X para cerrar el modal -->
-                        <button onclick="toggleModal()" class="absolute top-2 right-2 text-xl text-neutral-800 hover:text-red-500">×</button>
+                        <!-- Campo oculto para los productos seleccionados -->
+                        <input type="hidden" name="selectedProducts" id="selectedProductsInput">
+                        <!-- Botón para cerrar el modal -->
+                        <button type="button" onclick="toggleModal()" class="absolute top-2 right-2 text-xl text-neutral-800 hover:text-red-500">×</button>
                     </div>
+                </form>
+
                 </div>
 
                 <!-- Modal si no hay productos -->
@@ -112,8 +122,8 @@ class formEmitirProforma {
                     <th class="p-3">Producto</th>
                     <th class="p-3">Precio</th>
                     <th class="p-3">Cantidad</th>
-                    <th class="p-3">Acción</th>
                     <th class="p-3">Imagen</th>
+                    <th class="p-3">Acción</th>
                 </tr>
             </thead>
             <tbody id="product-body">

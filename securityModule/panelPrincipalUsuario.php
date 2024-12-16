@@ -1,5 +1,5 @@
 <?php 
-include_once("../../shared/renderHeader.php");
+    include_once("../../shared/renderHeader.php");
 class PanelPrincipalUsuario {
     public function mostrarPanel() {
         $usuario = $_SESSION['usuario']; // Obtiene el nombre de usuario o identificador
