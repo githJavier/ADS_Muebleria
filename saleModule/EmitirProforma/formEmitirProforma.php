@@ -32,18 +32,17 @@ class formEmitirProforma {
                         </div>
 
                         <!-- Espaciado para evitar solapamiento con la barra fija -->
-                        <div class="mt-24 flex justify-between gap-8">
+                        <div class="mb-6 mt-24 flex justify-between gap-8">
                             <!-- Contenedor para el input de búsqueda y botón de búsqueda pegado a la izquierda -->
                             <form action="getProforma.php" method="POST">
                                 <div class="flex gap-4 items-center w-full">
-                                    <input type="text" id="search-input" class="p-3 border rounded-md w-1/2" name="txtBuscarProducto" placeholder="Buscar producto...">
-                                    <button class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition" type="submit" name="btnBuscarProducto">Buscar</button>
+                                    <input type="text" id="search-input" class="bg-white border border-black text-black rounded-md p-2 w-48" name="txtBuscarProducto" placeholder="Buscar producto...">
+                                    <button class="bg-neutral-800 text-white font-bold py-2 px-6 rounded-md hover:bg-neutral-700" type="submit" name="btnBuscarProducto">Buscar</button>
                                 </div>
                             </form>
-
                             <!-- Botones para acciones alineados a la derecha -->
                             <div class="flex gap-4 justify-end w-full">
-                                <button onclick="toggleModal()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition">Productos Seleccionados</button>
+                                <button onclick="toggleModal()" class="py-1 px-2 font-bold bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition">Productos Seleccionados</button>
                             </div>
                         </div>
 
@@ -115,18 +114,18 @@ class formEmitirProforma {
 
     public function tableProducto($listaProductos) {
         ?>
-        <table border="1" id="product-table" class="w-full mx-auto text-center border border-gray-300">
-            <thead>
-                <tr>
-                    <th class="p-3">Código</th>
-                    <th class="p-3">Producto</th>
-                    <th class="p-3">Precio</th>
-                    <th class="p-3">Cantidad</th>
-                    <th class="p-3">Imagen</th>
-                    <th class="p-3">Acción</th>
+        <table border="1" id="product-table" class="min-w-full table-auto text-sm">
+            <thead class="border-b-2">
+                <tr class="bg-neutral-800 text-white">
+                    <th class="py-2 px-4 text-left text-sm">Código</th>
+                    <th class="py-2 px-4 text-left text-sm">Producto</th>
+                    <th class="py-2 px-4 text-left text-sm">Precio</th>
+                    <th class="py-2 px-4 text-left text-sm">Cantidad</th>
+                    <th class="py-2 px-4 text-left text-sm">Imagen</th>
+                    <th class="py-2 px-4 text-left text-sm">Acción</th>
                 </tr>
             </thead>
-            <tbody id="product-body">
+            <tbody id="product-body" class="border border-gray-300 border-b-2 border-b-gray-400">
                 <?php 
                 foreach ($listaProductos as $producto) {
                     $idProducto = $producto['idProducto'];
@@ -136,18 +135,18 @@ class formEmitirProforma {
                     $cantidad = $producto['cantidad'];
                     $imagen = $producto['imagen'];
                 ?>
-                <tr>
-                    <td class="p-3"><?php echo $codigo ?></td>
-                    <td class="p-3"><?php echo $nombre ?></td>
-                    <td class="p-3"><?php echo $precio ?></td>
-                    <td class="p-3">
-                        <button class="decrease" onclick="updateQuantity(event, <?php echo $idProducto ?>, <?php echo $cantidad ?>)">-</button>
-                        <input type="text" id="quantity-<?php echo $idProducto ?>" value="<?php echo ($cantidad > 0) ? 1 : 'Agotado'; ?>" readonly class="w-16 text-center <?php echo ($cantidad == 0) ? 'bg-gray-300' : ''; ?>">
-                        <button class="increase" onclick="updateQuantity(event, <?php echo $idProducto ?>, <?php echo $cantidad ?>)">+</button>
+                <tr class="">
+                    <td class="py-2 px-4 text-black text-sm"><?php echo $codigo ?></td>
+                    <td class="py-2 px-4 text-black text-sm"><?php echo $nombre ?></td>
+                    <td class="py-2 px-4 text-black text-sm"><?php echo $precio ?></td>
+                    <td class="py-2 px-4 text-black text-sm">
+                        <button class="decrease bg-neutral-800 text-white py-2 px-4 rounded-md hover:bg-neutral-700" onclick="updateQuantity(event, <?php echo $idProducto ?>, <?php echo $cantidad ?>)">-</button>
+                        <input type="text" id="quantity-<?php echo $idProducto ?>" value="<?php echo ($cantidad > 0) ? 1 : 'Agotado'; ?>" readonly class="py-1 px-4 rounded-md w-16 text-center <?php echo ($cantidad == 0) ? 'bg-gray-300' : ''; ?>">
+                        <button class="increase bg-neutral-800 text-white py-2 px-4 rounded-md hover:bg-neutral-700" onclick="updateQuantity(event, <?php echo $idProducto ?>, <?php echo $cantidad ?>)">+</button>
                     </td>
-                    <td class="p-3"><img src="<?php echo $imagen ?>" width="50"></td>
-                    <td class="p-3">
-                        <button onclick="addProductToList(event, '<?php echo $idProducto ?>', '<?php echo $codigo ?>', '<?php echo $nombre ?>', <?php echo $precio ?>)" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700">Agregar</button>
+                    <td class="py-2 px-4 text-black text-sm"><img src="<?php echo $imagen ?>" width="50"></td>
+                    <td class="py-2 px-4 text-black text-sm">
+                        <button onclick="addProductToList(event, '<?php echo $idProducto ?>', '<?php echo $codigo ?>', '<?php echo $nombre ?>', <?php echo $precio ?>)" class="bg-neutral-800 text-white py-2 px-4 rounded-md hover:bg-neutral-700">Agregar</button>
                     </td>
                 </tr>
                 <?php 

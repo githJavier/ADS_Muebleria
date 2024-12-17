@@ -18,7 +18,8 @@ class proforma
             return false;
         }
     }
-    function generarNumeroProforma($year, $month) {
+    //Agregue el public
+    public function generarNumeroProforma($year, $month) {
         // Obtiene el último número proforma generado para el mes actual
         $sql = "SELECT numeroProforma FROM proforma WHERE numeroProforma LIKE '$year$month%' ORDER BY numeroProforma DESC LIMIT 1";
         $result = mysqli_query(Conecta::conectarBD(), $sql);
@@ -35,6 +36,27 @@ class proforma
         }
         // Genera el nuevo número proforma
         return $year . $month . $newSequence;
+    }
+
+    public function listarProformas()
+    {
+        $sql = "SELECT * FROM proforma";
+        $conexion = Conecta::conectarBD();
+        $resultado = $conexion->query($sql);
+        Conecta::desConectaBD();
+        return $resultado;
+    }
+    public function obtenerProformasBusqueda($txtBuscarProforma){
+        $sql = "SELECT * FROM proforma WHERE numeroProforma = ?";
+        $conexion = Conecta::conectarBD();
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $txtBuscarProforma);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $listaProformas = $resultado->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        Conecta::desConectaBD();
+        return $listaProformas;
     }
 
 }

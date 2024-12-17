@@ -2,8 +2,7 @@
 session_start();
 include_once("controlEmitirProforma.php");
 include_once("../../shared/mensajeSistema.php");
-// Verifica si la sesión ya está iniciada antes de llamar a session_start()
-
+include_once("../../shared/mensajeVulnerabilidadSistema.php");
 
 function validaBoton($boton) {
     return isset($boton);
@@ -23,6 +22,10 @@ function verificarCaracteresEspeciales($txtBuscarProducto) {
     } else {
         return false;
     }
+}
+function mostrarMensaje($mensaje){
+    $objMensaje = new MensajeVulnerabilidadSistema();
+    $objMensaje->mostrarMensaje("Mensaje del Sistema",$mensaje);
 }
 
 function verificarExistenciaProductos($listaProductos) {
@@ -51,7 +54,7 @@ if (validaBoton($btnEmitirProforma)) {
         $objControlEmitirProforma = new controlEmitirProforma();
         $objControlEmitirProforma->listarProductosBD();
     } else {
-        header('Location: ../../securityModule/panelPrincipalUsuario.php');
+        mostrarMensaje("Acceso denegado. Se detectó un intento de acceso ilegal.");
         exit;
     }
 } else if (validaBoton($btnBuscarProducto)) {
@@ -100,8 +103,7 @@ if (validaBoton($btnEmitirProforma)) {
             $cantidad = htmlspecialchars($product['quantity']);
             $totalProducto = $precio * $cantidad;
             $subtotal = ($totalProducto * 0.72);
-            $impuesto = ($totalProducto * 18) / 
-            
+            $impuesto = ($totalProducto * 0.18);  // Corregido cálculo del impuesto
 
             // Añadir los productos a los arrays correspondientes
             $idProductos[] = $id;
@@ -126,7 +128,7 @@ if (validaBoton($btnEmitirProforma)) {
         }
     }
 } else {
-    header('Location: ../../securityModule/panelPrincipalUsuario.php');
+    mostrarMensaje("Acceso denegado. Se detectó un intento de acceso ilegal.");
     exit;
 }
 ?>

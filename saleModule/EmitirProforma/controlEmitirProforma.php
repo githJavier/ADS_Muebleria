@@ -1,7 +1,4 @@
 <?php
-// Verifica si la sesión ya está iniciada, solo la inicia si no lo está.
-
-
 include_once("./formEmitirProforma.php");
 include_once("../../model/producto.php");
 include_once("../../model/categoria.php");
@@ -15,8 +12,6 @@ class controlEmitirProforma {
         $objFormEmitirProforma = new formEmitirProforma();
         $objFormEmitirProforma->formEmitirProformaShow($listaProductos);
     }
-    
-    
 
     public function listarBusquedaProductos($txtBuscarProducto) {
         $objProducto = new producto();
@@ -44,24 +39,35 @@ class controlEmitirProforma {
         $numeroProforma = $numeroProforma->generarNumeroProforma($year, $month);
         $fecha = date("Y-m-d");
         $hora = date("H:i:s");
-        $subtotalProforma = $totalProforma *0.72;
-        $impuesto = floatval($totalProforma * 0.18);
+        $subtotalProforma = $totalProforma * 0.72;  // Correcto cálculo del subtotal
+        $impuesto = floatval($totalProforma * 0.18);  // Cálculo del impuesto
+        
+        // Insertar proforma en la base de datos
         $objProforma = new proforma();
-        $idProforma = $objProforma->insertarProforma($numeroProforma, $Usuario, $fecha, $hora, $totalProforma,$subtotalProforma, $impuesto);
+        $idProforma = $objProforma->insertarProforma($numeroProforma, $Usuario, $fecha, $hora, $totalProforma, $subtotalProforma, $impuesto);
 
-        $objDetalleProforma = new detalle_proforma();
-        foreach ($listaProductos as $listaProducto) {
-            $idProducto = $listaProducto["idProducto"];
-            $cantidad = $listaProducto["cantidad"];
-            $subtotal = $listaProducto["subtotal"];
-            $precioTotalProducto = $cantidad * $subtotal;
-            $respuesta = $objDetalleProforma->registrarDetalleProforma($idProforma, $idProducto, $cantidad, $subtotal,$precioTotalProducto);
-        }
+        if ($idProforma) {
+            // Insertar detalles de la proforma
+            $objDetalleProforma = new detalle_proforma();
+            foreach ($listaProductos as $listaProducto) {
+                $idProducto = $listaProducto["idProducto"];
+                $cantidad = $listaProducto["cantidad"];
+                $subtotal = $listaProducto["subtotal"];
+                $precioTotalProducto = $cantidad * $subtotal;
+                $respuesta = $objDetalleProforma->registrarDetalleProforma($idProforma, $idProducto, $cantidad, $subtotal, $precioTotalProducto);
+                
+                if (!$respuesta) {
+                    // Si falla la inserción de un detalle, mostrar mensaje y salir
+                    $objMensajeSistema->mensajeSistemaShow("Error al insertar detalles de la proforma", "../../securityModule/panelPrincipalUsuario.php", "systemOut");
+                    return;
+                }
+            }
 
-        if ($respuesta) {
-            $objMensajeSistema->mensajeSistemaShow("Proforma generada con éxito", "../../securityModule/panelPrincipalUsuario.php", "systemOut", true);
+            // Si todo es correcto, mostrar mensaje de éxito
+            $objMensajeSistema->mensajeSistemaShow("Proforma generada con éxito", "../EmitirProforma/getProforma.php", "systemOut", true);
         } else {
-            $objMensajeSistema->mensajeSistemaShow("Oops! Parece que algo salió mal.", "../../securityModule/panelPrincipalUsuario.php", "systemOut");
+            // Si falla la inserción de la proforma, mostrar mensaje de error
+            $objMensajeSistema->mensajeSistemaShow("Error al generar la proforma", "../../securityModule/panelPrincipalUsuario.php", "systemOut");
         }
     }
 }
