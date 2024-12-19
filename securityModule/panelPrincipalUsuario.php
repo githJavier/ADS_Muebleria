@@ -2,7 +2,8 @@
 include_once("../../shared/renderHeader.php");
 class PanelPrincipalUsuario {
     public function mostrarPanel() {
-        $usuario = $_SESSION['usuario']; // Obtiene el nombre de usuario o identificador
+        $usuario = $_SESSION['usuario']; 
+        // Obtiene el nombre de usuario o identificador
         $listarprivilegios = $_SESSION['listarprivilegios']; // Obtiene el array de privilegios
         $rol = $_SESSION['rol']; // Obtiene el rol del usuario
         $objCabecera = new renderHeader;

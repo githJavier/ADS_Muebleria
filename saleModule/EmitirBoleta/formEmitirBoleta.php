@@ -1,5 +1,4 @@
 <?php 
-include_once("formEmitirBoleta.php");
 include_once("../../shared/renderHeader.php");
 include_once("../../securityModule/panelPrincipalUsuario.php");
 
@@ -60,6 +59,7 @@ class formEmitirBoleta{
                                     $horaEmitida = $proforma['horaEmitida'];
                                     $monto = $proforma['total'];
                                     $estado = $proforma['estado'];
+                                    $idProforma = $proforma['idProforma']
                                 ?>
                                 <tr class="border-b border-gray-300 hover:bg-gray-100">
                                     <td class="py-2 px-4 text-black"><?php echo $numeroProforma; ?></td>
@@ -68,7 +68,10 @@ class formEmitirBoleta{
                                     <td class="py-2 px-4 text-black"><?php echo $monto; ?></td>
                                     <td class="py-2 px-4 text-black"><?php echo $estado; ?></td>
                                     <td class="py-2 px-4 text-black">
-                                        <button class="bg-neutral-800 text-white py-1 px-4 rounded-md hover:bg-neutral-700">Ver</button>
+                                        <form action="./getBoleta.php" method="post">
+                                            <input type="text" name="txtIdProforma" value="<?php echo $idProforma?>" class="hidden">
+                                            <button class="bg-neutral-800 text-white py-1 px-4 rounded-md hover:bg-neutral-700" name="btnVerBoleta">Ver</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 <?php } ?>

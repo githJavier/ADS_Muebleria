@@ -39,7 +39,7 @@ class controlEmitirProforma {
         $numeroProforma = $numeroProforma->generarNumeroProforma($year, $month);
         $fecha = date("Y-m-d");
         $hora = date("H:i:s");
-        $subtotalProforma = $totalProforma * 0.72;  // Correcto cálculo del subtotal
+        $subtotalProforma = $totalProforma * 0.82;  // Correcto cálculo del subtotal
         $impuesto = floatval($totalProforma * 0.18);  // Cálculo del impuesto
         
         // Insertar proforma en la base de datos

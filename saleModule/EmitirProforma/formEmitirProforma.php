@@ -61,47 +61,47 @@ class formEmitirProforma {
                 </div>
 
                 <!-- Modal para ver la lista de productos seleccionados -->
-                <div id="productModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-20 hidden">
                 <form id="proformaForm" method="post" action="getProforma.php">
-                    <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
-                        <h3 class="text-xl font-bold mb-4 text-center">Lista de Productos Seleccionados</h3>
-                        <table border="1" id="product-list" class="w-full mb-4 text-center border border-gray-300">
-                            <thead>
-                                <tr>
-                                    <th class="p-3">Código</th>
-                                    <th class="p-3">Producto</th>
-                                    <th class="p-3">Precio</th>
-                                    <th class="p-3">Cantidad</th>
-                                </tr>
-                            </thead>
-                            <tbody id="product-list-body">
-                                <!-- Aquí se mostrarán los productos seleccionados -->
-                            </tbody>
-                        </table>
-                        <!-- Botones dentro del modal -->
-                        <div class="flex gap-4 mt-4 justify-between">
-                            <button type="button" onclick="discardList()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2">Descartar Lista</button>
-                            <button type="submit" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2" name="btnGenerarProforma">Generar Proforma</button>
+                    <div id="productModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-20 hidden">
+                        <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
+                            <h3 class="text-xl font-bold mb-4 text-center">Lista de Productos Seleccionados</h3>
+                            <table border="1" id="product-list" class="w-full mb-4 text-center border border-gray-300">
+                                <thead>
+                                    <tr>
+                                        <th class="p-3">Código</th>
+                                        <th class="p-3">Producto</th>
+                                        <th class="p-3">Precio</th>
+                                        <th class="p-3">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-list-body">
+                                    <!-- Aquí se mostrarán los productos seleccionados -->
+                                </tbody>
+                            </table>
+                            <!-- Botones dentro del modal -->
+                            <div class="flex gap-4 mt-4 justify-between">
+                                <button type="button" onclick="discardList()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2">Descartar Lista</button>
+                                <button type="submit" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2" name="btnGenerarProforma">Generar Proforma</button>
+                            </div>
+                            <!-- Campo oculto para los productos seleccionados -->
+                            <input type="hidden" name="selectedProducts" id="selectedProductsInput">
+                            <!-- Botón para cerrar el modal -->
+                            <button type="button" onclick="toggleModal()" class="absolute top-2 right-2 text-xl text-neutral-800 hover:text-red-500">×</button>
                         </div>
-                        <!-- Campo oculto para los productos seleccionados -->
-                        <input type="hidden" name="selectedProducts" id="selectedProductsInput">
-                        <!-- Botón para cerrar el modal -->
-                        <button type="button" onclick="toggleModal()" class="absolute top-2 right-2 text-xl text-neutral-800 hover:text-red-500">×</button>
                     </div>
                 </form>
 
-                </div>
-
                 <!-- Modal si no hay productos -->
                 <div id="noProductsModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-20 hidden">
-                    <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
-                        <h3 class="text-xl font-bold mb-4 text-center">No hay productos seleccionados</h3>
-                        <p class="text-center">Por favor, agrega productos antes de proceder.</p>
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-3/4 max-w-2xl relative">
+                        <h3 class="text-2xl font-bold mb-4 text-center">No hay productos seleccionados</h3>
+                        <p class="text-center text-lg">Por favor, agrega productos antes de proceder.</p>
                         <div class="flex gap-4 mt-4 justify-center">
                             <button onclick="closeNoProductsModal()" class="p-3 bg-neutral-800 text-white rounded-md hover:bg-neutral-700 transition w-1/2">Cerrar</button>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Footer -->
                 <?php $panelPrincipal->mostrarFooter(); ?>
