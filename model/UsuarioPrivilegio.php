@@ -31,5 +31,12 @@ class UsuarioPrivilegio
 
         return $fila;
     }
+
+    public function asignarPrivilegio($idUsuario, $idPrivilegio) {
+        $conexion = Conecta::conectarBD();
+        $sql = "INSERT INTO usuarioPrivilegio (idUsuario, idPrivilegio) VALUES ($idUsuario, $idPrivilegio)";
+        mysqli_query($conexion, $sql);
+        Conecta::desConectaBD();
+    }
 }
 ?>

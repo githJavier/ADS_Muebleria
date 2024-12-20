@@ -19,5 +19,30 @@ class rol{
         Conecta::desConectaBD();
         return $rol;
     }
+
+
+    // 
+    public function listarRoles() {
+        $conexion = Conecta::conectarBD();
+        $sql = "SELECT idRol, nombre_rol FROM rol";
+        $resultado = mysqli_query($conexion, $sql);
+        $roles = [];
+
+        if ($resultado && mysqli_num_rows($resultado) > 0) {
+            while ($fila = mysqli_fetch_assoc($resultado)) {
+                $roles[] = $fila;
+            }
+        }
+
+        Conecta::desConectaBD();
+        return $roles;
+    }
+
+    public function asignarRol($idUsuario, $idRol) {
+        $conexion = Conecta::conectarBD();
+        $sql = "INSERT INTO usuariorol (idUsuario, idRol) VALUES ($idUsuario, $idRol)";
+        mysqli_query($conexion, $sql);
+        Conecta::desConectaBD();
+    }
 }
 ?>
