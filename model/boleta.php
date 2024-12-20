@@ -59,8 +59,35 @@ include_once("Conecta.php");
             // Devolver el arreglo con los resultados
             return $detallesBoleta;
         }
-        
 
+        public function obtenerBoletaBusqueda($txtBuscarBoleta) {
+            $sql = "SELECT * FROM boleta WHERE numeroBoleta = ? AND estado = 'Pagada'";
+            $conexion = Conecta::conectarBD();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bind_param("s", $txtBuscarBoleta);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            $boleta = $resultado->fetch_assoc();
+            $stmt->close();
+            Conecta::desConectaBD();
+            return $boleta;
+        }
+        public function actualizarBoleta($idBoleta) {
+            $conexion = Conecta::conectarBD();
+            $sql = "UPDATE boleta SET estado = 'Despachada' WHERE idBoleta = ? AND estado = 'Pagada'";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bind_param("i", $idBoleta);
+            $stmt->execute();
+            if ($stmt->affected_rows > 0) {
+                $resultado = true;
+            } else {
+                $resultado = false;
+            }
+            $stmt->close();
+            Conecta::desConectaBD();
+            return $resultado;
+        }
+        
         
     }
 
