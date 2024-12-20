@@ -1,18 +1,18 @@
 <?php
 class ControlGUP {
-    function mostrarMensaje($mensaje) {
+    private function mostrarMensaje($mensaje) {
         include 'ScreenMensaje.php';
         $objMensaje = new ScreenMensaje();
         $objMensaje->screenMensajeShow($mensaje);
     }
-    function mensajeExitoso($mensaje) {
+
+    private function mensajeExitoso($mensaje) {
         include 'ScreenMensaje.php';
         $objMensaje = new ScreenMensaje();
         $objMensaje->screenSuccessful($mensaje);
     }
     
     public function obtenerListaGUP() {
-        // Llamar al modelo para obtener la lista de usuarios
         include '../../model/usuario.php';
         $objUsuario = new usuario();
         $listaUsuarios = $objUsuario->listarUsuariosParaGestion();
@@ -38,46 +38,127 @@ class ControlGUP {
     }
 
     public function crearUsuario($nombre, $apellido, $correo, $telefono, $nombreUsuario, $clave, $estado, $preguntaSeguridad, $respuestaSeguridad, $roles, $privilegios) {
-        // ✅
-        
         include '../../model/usuario.php';
         $objUsuario = new usuario();
-        // Verificar si el usuario ya existe
+
         if ($objUsuario->validarUsuario($nombreUsuario)) {
+            $this->mostrarMensaje("El nombre de usuario '$nombreUsuario' ya existe.");
+        } else {
+            $idUsuario = $objUsuario->agregarUsuario($nombre, $apellido, $correo, $telefono, $nombreUsuario, $clave, $estado, $preguntaSeguridad, $respuestaSeguridad);
+
+            if ($idUsuario) {
+                if (!empty($roles)) {
+                    include '../../model/usuariorol.php';
+                    $objUsuarioRol = new UsuarioRol();
+                    foreach ($roles as $idRol) {
+                        $objUsuarioRol->asignarRol($idUsuario, $idRol);
+                    }
+                }
+
+                if (!empty($privilegios)) {
+                    include '../../model/UsuarioPrivilegio.php';
+                    $objUsuarioPrivilegio = new UsuarioPrivilegio();
+                    foreach ($privilegios as $idPrivilegio) {
+                        $objUsuarioPrivilegio->asignarPrivilegio($idUsuario, $idPrivilegio);
+                    }
+                }
+
+                $this->mensajeExitoso("Usuario agregado exitosamente.");
+            } else {
+                $this->mostrarMensaje("Error al agregar el usuario.");
+            }
+        }
+    }
+
+    public function mostrarFormularioEditarUsuario($idUsuario) {
+        include '../../model/usuario.php';
+        include '../../model/rol.php';
+        include '../../model/privilegio.php';
+        include '../../model/usuariorol.php';
+        include '../../model/UsuarioPrivilegio.php';
+
+        $objUsuario = new usuario();
+        $objRol = new rol();
+        $objPrivilegio = new privilegio();
+        $objUsuarioRol = new UsuarioRol();
+        $objUsuarioPrivilegio = new UsuarioPrivilegio();
+
+        // Obtener información del usuario por ID
+        $usuario = $objUsuario->obtenerUsuarioPorId($idUsuario);
+
+        // Listar todos los roles y privilegios
+        $roles = $objRol->listarRoles();
+        $privilegios = $objPrivilegio->listarPrivilegios();
+
+        // Obtener roles y privilegios asignados al usuario
+        $rolesAsignados = $objUsuarioRol->obtenerRolesPorUsuario($idUsuario);
+        $privilegiosAsignados = $objUsuarioPrivilegio->obtenerPrivilegiosPorUsuario($idUsuario);
+
+        // Incluir y mostrar el formulario de edición
+        include 'formEditarUsuario.php';
+        $formEditarUsuario = new formEditarUsuario();
+        $formEditarUsuario->formEditarUsuarioShow($usuario, $roles, $privilegios, $rolesAsignados, $privilegiosAsignados);
+    }
+
+    public function actualizarUsuario($idUsuario, $nombre, $apellido, $correo, $telefono, $nombreUsuario, $clave, $estado, $preguntaSeguridad, $respuestaSeguridad, $roles, $privilegios) {
+        include '../../model/usuario.php';
+        include '../../model/usuariorol.php';
+        include '../../model/UsuarioPrivilegio.php';
+    
+        $objUsuario = new usuario();
+        $objUsuarioRol = new UsuarioRol();
+        $objUsuarioPrivilegio = new UsuarioPrivilegio();
+    
+        // Verificar si el nombre de usuario ya existe
+        if ($objUsuario->validarUsuarioExistente($idUsuario, $nombreUsuario)) {
             $this->mostrarMensaje("El nombre de usuario '$nombreUsuario' ya existe.");
             return;
         }
-        // echo "<pre>";
-        // var_dump($_POST);
-        // var_dump('p1');
-        // echo "</pre>";
-        // exit;
-        
-        // Agregar el usuario
-        $idUsuario = $objUsuario->agregarUsuario($nombre, $apellido, $correo, $telefono, $nombreUsuario, $clave, $estado, $preguntaSeguridad, $respuestaSeguridad);
-
-        if ($idUsuario) {
-            // Asociar roles al usuario
-            if (!empty($roles)) {
-                include '../../model/usuariorol.php';
-                $objUsuarioRol = new UsuarioRol();
-                foreach ($roles as $idRol) {
-                    $objUsuarioRol->asignarRol($idUsuario, $idRol);
-                }
+    
+        // Actualizar el usuario
+        $resultado = $objUsuario->actualizarUsuario($idUsuario, $nombre, $apellido, $correo, $telefono, $nombreUsuario, $clave, $estado, $preguntaSeguridad, $respuestaSeguridad);
+    
+        if ($resultado) {
+            // Eliminar roles anteriores y asignar nuevos roles
+            $objUsuarioRol->eliminarRolesPorUsuario($idUsuario);
+            foreach ($roles as $idRol) {
+                $objUsuarioRol->asignarRol($idUsuario, $idRol);
             }
-
-            // Asociar privilegios al usuario
-            if (!empty($privilegios)) {
-                include '../../model/UsuarioPrivilegio.php';
-                $objUsuarioPrivilegio = new UsuarioPrivilegio();
-                foreach ($privilegios as $idPrivilegio) {
-                    $objUsuarioPrivilegio->asignarPrivilegio($idUsuario, $idPrivilegio);
-                }
+    
+            // Eliminar privilegios anteriores y asignar nuevos privilegios
+            $objUsuarioPrivilegio->eliminarPrivilegiosPorUsuario($idUsuario);
+            foreach ($privilegios as $idPrivilegio) {
+                $objUsuarioPrivilegio->asignarPrivilegio($idUsuario, $idPrivilegio);
             }
-
-            $this->mensajeExitoso("Usuario agregado exitosamente.");
+    
+            $this->mensajeExitoso("Usuario actualizado exitosamente.");
         } else {
-            $this->mostrarMensaje("Error al agregar el usuario.");
+            $this->mostrarMensaje("Error al actualizar el usuario.");
+        }
+    }
+
+    public function eliminarUsuario($idUsuario) {
+        include '../../model/usuario.php';
+        include '../../model/usuariorol.php';
+        include '../../model/UsuarioPrivilegio.php';
+    
+        $objUsuario = new usuario();
+        $objUsuarioRol = new UsuarioRol();
+        $objUsuarioPrivilegio = new UsuarioPrivilegio();
+    
+        // Eliminar roles asociados
+        $objUsuarioRol->eliminarRolesPorUsuario($idUsuario);
+    
+        // Eliminar privilegios asociados
+        $objUsuarioPrivilegio->eliminarPrivilegiosPorUsuario($idUsuario);
+    
+        // Eliminar el usuario
+        $resultado = $objUsuario->eliminarUsuarioPorId($idUsuario);
+    
+        if ($resultado) {
+            $this->mensajeExitoso("Usuario eliminado exitosamente.");
+        } else {
+            $this->mostrarMensaje("Error al eliminar el usuario.");
         }
     }
 }
