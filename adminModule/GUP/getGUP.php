@@ -1,7 +1,12 @@
 <?php
+session_start();
 function validaBoton($boton) {
     return isset($boton);
 }
+function verificarSesionIniciada() {
+    return isset($_SESSION['usuario']);
+}
+
 
 function mostrarMensaje($mensaje) {
     include '../../shared/mensajeSistema.php';
@@ -34,9 +39,11 @@ $btnEditarUsuario = $_POST['btnEditarUsuario'] ?? null;
 $btnEliminarUsuario = $_POST['btnEliminarUsuario'] ?? null;
 
 if (validaBoton($btnGUP)) {
-    include 'controlGUP.php';
-    $objControlGUP = new ControlGUP();
-    $objControlGUP->obtenerListaGUP();
+    if(verificarSesionIniciada()){
+        include 'controlGUP.php';
+        $objControlGUP = new ControlGUP();
+        $objControlGUP->obtenerListaGUP();
+    }
 } else if (validaBoton($btnAgregarUsuario)) {
     include 'controlGUP.php';
     $objControlGUP = new ControlGUP();

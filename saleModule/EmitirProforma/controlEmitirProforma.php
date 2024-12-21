@@ -64,7 +64,8 @@ class controlEmitirProforma {
             }
 
             // Si todo es correcto, mostrar mensaje de éxito
-            $objMensajeSistema->mensajeSistemaShow("Proforma generada con éxito", "../EmitirProforma/getProforma.php", "systemOut", true);
+            $this->listarProductosBD();
+            $objMensajeSistema->mensajeSistemaShow("Proforma generada con éxito", "getProforma.php");
         } else {
             // Si falla la inserción de la proforma, mostrar mensaje de error
             $objMensajeSistema->mensajeSistemaShow("Error al generar la proforma", "../../securityModule/panelPrincipalUsuario.php", "systemOut");

@@ -79,14 +79,16 @@ include_once("../../securityModule/panelPrincipalUsuario.php");
                                             <?php echo $producto['cantidad']; ?>
                                         </td>
                                         <td class="py-2 px-4 text-black text-sm">
-                                            <div class="flex space-x-4">
-                                                <button class="bg-neutral-800 text-white px-3 py-2 rounded hover:bg-neutral-700">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </div>
+                                            <form action="getGestionrProducto.php" method="post">
+                                                <div class="flex space-x-4">
+                                                    <button class="bg-neutral-800 text-white px-3 py-2 rounded hover:bg-neutral-700" name="btnEditar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600" name="btnEliminar">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </td>      
                                     </tr>
                                     <?php } ?>

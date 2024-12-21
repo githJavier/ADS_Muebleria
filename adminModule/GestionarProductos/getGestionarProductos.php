@@ -27,12 +27,14 @@ include_once("../../shared/mensajeVulnerabilidadSistema.php");
     }
     
     //Declaracion de Botones
-    $btnEmitirBoleta = $_POST['btnGestionarProducto'] ?? null;
+    $btnGestionarProducto = $_POST['btnGestionarProducto'] ?? null;
     $btnBuscarProducto = $_POST['btnBuscarProducto'] ?? null;
     $btnAgregarProducto = $_POST['btnAgregarProducto'] ?? null;
     $btnCrearProducto = $_POST['btnCrearProducto'] ?? null;
+    $btnEditar = $_POST['btnEditar'] ?? null;
+    $btnEliminar = $_POST['btnEliminar'] ?? null;
 
-    if(validaBoton($btnEmitirBoleta)){
+    if(validaBoton($btnGestionarProducto)){
         if (verificarSesionIniciada()) {
             $objControlGestionarProducto = new controlGestionarProducto;
             $objControlGestionarProducto->listarProductosCategoria();
@@ -75,5 +77,9 @@ include_once("../../shared/mensajeVulnerabilidadSistema.php");
         
         $objControlGestionarProducto = new controlGestionarProducto;
         $objControlGestionarProducto->listarProductosCategoria();
+    }else if(validaBoton($btnEditar)){
+
+    }else if(validaBoton($btnEliminar)){
+        
     }
 ?>

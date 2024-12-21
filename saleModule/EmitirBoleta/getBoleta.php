@@ -123,7 +123,7 @@ if(validaBoton($btnEmitirBoleta) || validaBoton($btnCancelar)){
         $objControlEmitirBoleta->listarProformas();
 
         $objMensajeSistema = new mensajeSistema();
-        $objMensajeSistema->mensajeSistemaShow("Ingrese codigo válido", "getProforma.php");
+        $objMensajeSistema->mensajeSistemaShow("Ingrese numero de proforma válido", "getProforma.php");
     }
 }else if(validaBoton($btnVerBoleta)){
     $objControlEmitirBoletaVenta = new ControlEmitirBoleta();

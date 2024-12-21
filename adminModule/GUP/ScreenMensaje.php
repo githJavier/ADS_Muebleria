@@ -33,7 +33,7 @@ class ScreenMensaje {
                         <p class="text-gray-600 mb-8"><?php echo $mensaje ?></p>                
                         <form method="POST" action="<?php echo $ruta ?>">                            
                             <button 
-                            name="btnGP"
+                            name="btnGUP"
                             class="bg-custom hover:bg-red-700 text-white font-semibold py-3 px-6 !rounded-button transition duration-200 ease-in-out w-full mb-4">                    
                                 Aceptar
                             </button>
@@ -45,7 +45,7 @@ class ScreenMensaje {
         </html>
         <?php
     }
-    public function screenSuccessful($mensaje, $ruta = "getGP.php") {
+    public function screenSuccessful($mensaje, $ruta = "getGUP.php") {
     
         ?>
         <!DOCTYPE html><html lang="es"><head>
@@ -71,7 +71,7 @@ class ScreenMensaje {
                         <p class="text-gray-600 mb-8"><?php echo $mensaje ?></p>
                         <form method="POST" action="<?php echo $ruta ?>">
                             <button 
-                            name="btnGP"
+                            name="btnGUP"
                             class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 !rounded-button transition duration-200 ease-in-out w-full mb-4">
                                 Aceptar
                             </button>
