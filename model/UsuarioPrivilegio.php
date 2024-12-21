@@ -38,5 +38,29 @@ class UsuarioPrivilegio
         mysqli_query($conexion, $sql);
         Conecta::desConectaBD();
     }
+
+    public function obtenerPrivilegiosPorUsuario($idUsuario) {
+        $conexion = Conecta::conectarBD();
+        $sql = "SELECT idPrivilegio FROM usuarioPrivilegio WHERE idUsuario = $idUsuario";
+        $resultado = mysqli_query($conexion, $sql);
+        $privilegiosAsignados = [];
+
+        if ($resultado && mysqli_num_rows($resultado) > 0) {
+            while ($fila = mysqli_fetch_assoc($resultado)) {
+                $privilegiosAsignados[] = $fila['idPrivilegio'];
+            }
+        }
+
+        Conecta::desConectaBD();
+        return $privilegiosAsignados;
+    }
+
+
+    public function eliminarPrivilegiosPorUsuario($idUsuario) {
+        $conexion = Conecta::conectarBD();
+        $sql = "DELETE FROM usuarioPrivilegio WHERE idUsuario = $idUsuario";
+        mysqli_query($conexion, $sql);
+        Conecta::desConectaBD();
+    }
 }
 ?>

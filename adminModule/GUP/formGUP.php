@@ -69,6 +69,7 @@ class formGUP {
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-2">
                                                 <form method="POST" action="getGUP.php">
+                                                <input type="hidden" name="idUsuario" value="<?php echo $usuario['idUsuario']; ?>">
                                                     <button 
                                                     name="btnEditarUsuario" value="btnEditarUsuario"
                                                     class="bg-neutral-800 text-white px-3 py-2 rounded hover:bg-neutral-700">
@@ -76,6 +77,7 @@ class formGUP {
                                                     </button>
                                                 </form>
                                                 <form method="POST" action="getGUP.php">
+                                                    <input type="hidden" name="idUsuario" value="<?php echo $usuario['idUsuario']; ?>">
                                                     <button
                                                     name="btnEliminarUsuario" value="btnEliminarUsuario"
                                                     class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600">

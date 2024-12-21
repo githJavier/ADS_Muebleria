@@ -65,7 +65,7 @@ class FormAutenticarUsuario{
                             </div>
                             <!-- Acciones -->
                             <div class="flex items-center justify-between">
-                                <a href="../modulo-seguridad/viewRecordarClave.php" class="text-sm font-medium text-custom hover:text-custom">¿Olvidaste tu contraseña?</a>
+                                <a href="viewRecordarClave.php" class="text-sm font-medium text-custom hover:text-custom">¿Olvidaste tu contraseña?</a>
                             </div>
                             <button type="submit" name="btnIngresar" class="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom">
                                 Iniciar Sesión
