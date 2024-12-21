@@ -6,7 +6,7 @@ class Conecta
     public static function conectarBD()
     {
         if (!self::$conexion) {
-            self::$conexion = mysqli_connect('localhost', 'root', 'root', 'muebleria_m2');
+            self::$conexion = mysqli_connect('localhost', 'root', 'root', 'muebleria_m3');
             if (!self::$conexion) {
                 die("Error al conectar a la base de datos: " . mysqli_connect_error());
             }

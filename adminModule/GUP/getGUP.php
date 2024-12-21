@@ -26,6 +26,15 @@ function validarClave($clave) {
     return strlen($clave) >= 3;
 }
 
+function validarIdUsuario($id) {
+    // Verifica que esté definido y sea un número entero
+    if (isset($id) && ctype_digit($id) && (int)$id > 0) {
+        return true;
+    }
+    return false;
+}
+
+
 // Capturar botones
 $btnGUP = $_POST['btnGUP'] ?? null;
 $btnAgregarUsuario = $_POST['btnAgregarUsuario'] ?? null;
@@ -122,12 +131,16 @@ if (validaBoton($btnGUP)) {
             mostrarMensaje("El correo electrónico no es válido.");
         }
     } else {
+        // mostrarMensaje("El nombre o apellido estan vacios");
+        // mostrarMensaje("El nombre o apellido es muy corto");
         mostrarMensaje("El nombre o apellido no es válido.");
     }
 } else if (validaBoton($btnEliminarUsuario)) {
+
+    //
     $idUsuario = $_POST['idUsuario'] ?? null;
 
-    if ($idUsuario) {
+    if (validarIdUsuario($idUsuario)) {
         include 'controlGUP.php';
         $objControlGUP = new ControlGUP();
         $objControlGUP->eliminarUsuario($idUsuario);
@@ -137,4 +150,3 @@ if (validaBoton($btnGUP)) {
 } else {
     mostrarMensaje("Acceso denegado. No se detectó un intento válido.");
 }
-?>
