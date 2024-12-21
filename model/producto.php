@@ -75,7 +75,9 @@ class producto{
     $sql = "SELECT p.idProducto, p.codigo, p.producto, p.precio, p.cantidad, p.imagen, c.categoria 
             FROM producto p
             LEFT JOIN productocategoria pc ON p.idProducto = pc.idProducto
-            LEFT JOIN categoria c ON pc.idCategoria = c.idCategoria";
+            LEFT JOIN categoria c ON pc.idCategoria = c.idCategoria
+            WHERE estado = 'Activo'
+            ORDER BY p.codigo ASC";
     $stmt = $conexion->prepare($sql);
     $stmt->execute();
     $resultado = $stmt->get_result();
@@ -142,6 +144,23 @@ public function verificarProductoPorNombre($nombre)
     Conecta::desConectaBD();
     return $data['total'] > 0; // Retorna true si el producto existe, false si no
 }
+public function verificarProductoPorNombreEditar($nombre, $idProducto)
+{
+    $conexion = Conecta::conectarBD();
+    $sql = "SELECT COUNT(*) AS total 
+            FROM producto 
+            WHERE LOWER(TRIM(producto)) = LOWER(TRIM(?)) 
+            AND idProducto != ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("si", $nombre, $idProducto); // "s" para string (nombre) y "i" para int (idProducto)
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $data = $resultado->fetch_assoc();
+    $stmt->close();
+    Conecta::desConectaBD();
+    return $data['total'] > 0; // Retorna true si otro producto con el mismo nombre existe, false si no
+}
+
 public function crearProducto($codigo, $producto, $precio, $cantidad)
 {
     $conexion = Conecta::conectarBD();
@@ -163,6 +182,71 @@ public function crearProducto($codigo, $producto, $precio, $cantidad)
 
     return $idProducto;
 }
+
+public function buscarProductoId($idProducto){
+    $conexion = Conecta::conectarBD();
+    $sql = "SELECT p.idProducto, p.codigo, p.producto, p.precio, p.cantidad, c.idCategoria, c.categoria
+            FROM producto p
+            JOIN productocategoria pc ON p.idProducto = pc.idProducto
+            JOIN categoria c ON pc.idCategoria = c.idCategoria
+            WHERE p.idProducto = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $idProducto);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $producto = $resultado->fetch_assoc();  // Convertimos el resultado en un array asociativo
+    $stmt->close();
+    Conecta::desConectaBD();
+    return $producto;  // Devolvemos el array asociativo
+}
+
+public function crearCodigo() {
+    $conexion = Conecta::conectarBD();
+    // Obtener el último código generado en la base de datos para la categoría
+    $sql = "SELECT codigo FROM producto WHERE codigo LIKE 'MUEB%' ORDER BY codigo DESC LIMIT 1;";
+    $stmt = $conexion->prepare($sql);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+    $ultimoCodigo = $resultado->fetch_assoc()['codigo'] ?? null;
+    if ($ultimoCodigo) {
+        $numero = (int)substr($ultimoCodigo, 4);
+        $nuevoNumero = $numero + 1; // Incrementamos el número
+    } else {
+
+        $nuevoNumero = 1;
+    }
+    $codigoProducto= 'MUEB' . str_pad($nuevoNumero, 8, '0', STR_PAD_LEFT);
+    Conecta::desConectaBD();
+    return $codigoProducto;
+}
+public function actualizarProducto($idProducto, $producto,$precio, $cantidad){
+    $conexion = Conecta::conectarBD();
+    $sql = "UPDATE Producto SET producto = ?, precio = ?, cantidad = ? WHERE idProducto = ?;";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("sdii", $producto, $precio, $cantidad, $idProducto );
+    $stmt->execute();
+    $respuesta = $stmt->affected_rows > 0;
+    $stmt->close();
+    Conecta::desConectaBD();
+    return $respuesta;
+}
+
+public function actualizarEstadoProducto($idProducto)
+{
+    $conexion = Conecta::conectarBD();
+    $sql = "UPDATE producto SET estado = 'descontinuado' WHERE idProducto = ?";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i",  $idProducto);
+    $stmt->execute();
+    $respuesta = $stmt->affected_rows > 0;
+    $stmt->close();
+    Conecta::desConectaBD();
+    return $respuesta;
+}
+
+
+
+
 
 
     

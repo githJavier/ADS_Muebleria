@@ -34,10 +34,7 @@ class ScreenMensaje {
                         <form method="POST" action="<?php echo $ruta ?>">                            
                             <button 
                             name="btnGUP"
-<<<<<<< HEAD
-=======
                             type="submit"
->>>>>>> 2dd8a71c2959956971ed99674d73e5e4ea60e017
                             class="bg-custom hover:bg-red-700 text-white font-semibold py-3 px-6 !rounded-button transition duration-200 ease-in-out w-full mb-4">                    
                                 Aceptar
                             </button>
@@ -76,10 +73,6 @@ class ScreenMensaje {
                         <form method="POST" action="<?php echo $ruta ?>">
                             <button 
                             name="btnGUP"
-<<<<<<< HEAD
-=======
-                            type="submit"
->>>>>>> 2dd8a71c2959956971ed99674d73e5e4ea60e017
                             class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 !rounded-button transition duration-200 ease-in-out w-full mb-4">
                                 Aceptar
                             </button>

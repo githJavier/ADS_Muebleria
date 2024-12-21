@@ -1,6 +1,6 @@
 <?php
-class formAgregarProducto{
-    public function formAgregarProductoShow($listaCategorias, $codigoNuevo) {
+class formEditarProducto{
+    public function formEditarProductoShow($producto, $listaCategorias) {
         $usuario = $_SESSION['usuario'];
         $listarprivilegios = $_SESSION['listarprivilegios'];
         $rol = $_SESSION['rol'];
@@ -41,7 +41,7 @@ class formAgregarProducto{
                                             name="txtCodigo"
                                             type="text" 
                                             class="mt-1 block w-full py-3 px-4 border border-gray-300 rounded-md shadow-sm focus:ring-custom focus:border-custom text-sm"
-                                            value="<?php echo $codigoNuevo?>"  
+                                            value="<?php echo $producto['codigo']?>"  
                                             readonly
                                         />
                                     </div>
@@ -56,6 +56,7 @@ class formAgregarProducto{
                                             name="txtProducto"
                                             type="text" 
                                             class="mt-1 block w-full py-3 px-4 border border-gray-300 rounded-md shadow-sm focus:ring-custom focus:border-custom text-sm"
+                                            value="<?php echo $producto['producto']?>"
                                         />
                                     </div>
                                 </div>
@@ -65,17 +66,17 @@ class formAgregarProducto{
                                         <label for="opcCategoria" class="block text-sm font-medium text-gray-700">
                                             Categoría
                                         </label>
-                                        <select 
-                                            name="opcCategoria"
-                                            class="mt-1 block w-full py-3 px-4 border border-gray-300 rounded-md shadow-sm focus:ring-custom focus:border-custom text-sm"
-                                        >
+                                        <select name="opcCategoria" class="mt-1 block w-full py-3 px-4 border border-gray-300 rounded-md shadow-sm focus:ring-custom focus:border-custom text-sm">
                                             <option value="">Seleccione una categoría</option>
                                             <?php foreach ($listaCategorias as $categoria) { ?>
-                                                <option value="<?php echo $categoria['idCategoria']; ?>">
+                                                <option value="<?php echo $categoria['idCategoria']; ?>"
+                                                    <?php echo ($categoria['idCategoria'] == $producto['idCategoria']) ? 'selected' : ''; ?>
+                                                >
                                                     <?php echo $categoria['categoria']; ?>
                                                 </option>
                                             <?php } ?>
                                         </select>
+
                                     </div>
                                 </div>
 
@@ -95,6 +96,7 @@ class formAgregarProducto{
                                                 placeholder="0.00"
                                                 onkeypress="validarNumeroConDecimal(event)"
                                                 oninput="limpiarCaracteresNoValidos(this)"
+                                                value="<?php echo $producto['precio']?>"
                                             />
                                         </div>
                                     </div>
@@ -108,6 +110,7 @@ class formAgregarProducto{
                                             class="mt-1 block w-full py-3 px-4 border border-gray-300 rounded-md shadow-sm focus:ring-custom focus:border-custom text-sm"
                                             onkeypress="return validarSoloNumeros(event)" 
                                             oninput="limpiarEntrada(this)" 
+                                            value="<?php echo $producto['cantidad']?>"
                                         />
                                     </div>
                                 </div>
@@ -117,8 +120,8 @@ class formAgregarProducto{
                                 <button name="btnGestionarProducto" type="submit" class="!rounded-button inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom">
                                     Cancelar
                                 </button>                                    
-                                <button name="btnCrearProducto" type="submit" class="!rounded-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-custom hover:bg-custom-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom">
-                                    Guardar Producto
+                                <button name="btnGuardarDatos" type="submit" class="!rounded-button inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-custom hover:bg-custom-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-custom" value="<?php echo $producto['idProducto']?>">
+                                    Guardar Datos
                                 </button>
                             </div>
                         

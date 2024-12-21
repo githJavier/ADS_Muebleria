@@ -33,6 +33,8 @@ include_once("../../shared/mensajeVulnerabilidadSistema.php");
     $btnCrearProducto = $_POST['btnCrearProducto'] ?? null;
     $btnEditar = $_POST['btnEditar'] ?? null;
     $btnEliminar = $_POST['btnEliminar'] ?? null;
+    $btnGuardarDatos = $_POST['btnGuardarDatos'] ?? null;
+
 
     if(validaBoton($btnGestionarProducto)){
         if (verificarSesionIniciada()) {
@@ -52,14 +54,14 @@ include_once("../../shared/mensajeVulnerabilidadSistema.php");
                 $objControlGestionarProducto->listarProductosCategoria();
 
                 $objMensajeSistema = new mensajeSistema();
-                $objMensajeSistema->mensajeSistemaShow("Se detectaron caracteres no válidos", "getProforma.php");
+                $objMensajeSistema->mensajeSistemaShow("Se detectaron caracteres no válidos", "getGestionarProductos.php");
             }
         }else{
             $objControlGestionarProducto = new controlGestionarProducto;
             $objControlGestionarProducto->listarProductosCategoria();
 
             $objMensajeSistema = new mensajeSistema();
-            $objMensajeSistema->mensajeSistemaShow("Ingrese id o nombre de producto válido", "getProforma.php");
+            $objMensajeSistema->mensajeSistemaShow("Ingrese id o nombre de producto válido", "getGestionarProductos.php");
         }
     }elseif (validaBoton($btnAgregarProducto)) {
         $objAgregar = new controlGestionarProducto();
@@ -71,15 +73,114 @@ include_once("../../shared/mensajeVulnerabilidadSistema.php");
         $categoria = $_POST['opcCategoria'];
         $precio = $_POST['txtPrecio'];
         $cantidad = $_POST['txtCantidad'];
+        if(verificarCamposVacios($producto) && !verificarCaracteresEspeciales($producto)){
+            if(verificarCamposVacios($categoria)){
+                if(verificarCamposVacios($precio)){
+                    if(verificarCamposVacios($cantidad)){
+                        $objCrear = new controlGestionarProducto();
+                        $respuesta = $objCrear->crearProducto($codigo, $producto, $categoria, $precio, $cantidad);
+                        if($respuesta){
+                            $objControlGestionarProducto = new controlGestionarProducto;
+                            $objControlGestionarProducto->listarProductosCategoria();
+                            $objMensajeSistema = new mensajeSistema();
+                            $objMensajeSistema->mensajeSistemaShow("Producto agregado Correctamente", "getGestionarProductos.php", suceso:true);
+                        }else{
+                            $objAgregar = new controlGestionarProducto();
+                            $objAgregar->agregarProducto();
+                            $objMensajeSistema = new mensajeSistema();
+                            $objMensajeSistema->mensajeSistemaShow("El producto ya existe", "getGestionarProductos.php");
 
-        $objCrear = new controlGestionarProducto();
-        $objCrear->crearProducto($codigo, $producto, $categoria, $precio, $cantidad);
+                        }
+                    }else{
+                        $objAgregar = new controlGestionarProducto();
+                        $objAgregar->agregarProducto();
+                        $objMensajeSistema = new mensajeSistema();
+                        $objMensajeSistema->mensajeSistemaShow("Ingresa la cantidad del producto", "getGestionarProductos.php");
+                    }
+                }else{
+                    $objAgregar = new controlGestionarProducto();
+                    $objAgregar->agregarProducto();
+                    $objMensajeSistema = new mensajeSistema();
+                    $objMensajeSistema->mensajeSistemaShow("Ingresa el precio del producto", "getGestionarProductos.php");
+                }
+            }else{
+                $objAgregar = new controlGestionarProducto();
+                $objAgregar->agregarProducto();
+                $objMensajeSistema = new mensajeSistema();
+                $objMensajeSistema->mensajeSistemaShow("Seleccione la categoria", "getGestionarProductos.php");
+            }
+        }else{
+            $objAgregar = new controlGestionarProducto();
+            $objAgregar->agregarProducto();
+            $objMensajeSistema = new mensajeSistema();
+            $objMensajeSistema->mensajeSistemaShow("Ingrese el nombre del producto y/o verifique que no tenga caracteres especiales", "getGestionarProductos.php");
+        }
         
-        $objControlGestionarProducto = new controlGestionarProducto;
-        $objControlGestionarProducto->listarProductosCategoria();
     }else if(validaBoton($btnEditar)){
-
-    }else if(validaBoton($btnEliminar)){
+        $idProducto = $_POST['btnEditar'];
+        $objControlGestionarProducto = new controlGestionarProducto;
+        $objControlGestionarProducto->editarProducto($idProducto);
+    
         
+    }else if(validaBoton($btnGuardarDatos)){
+        // Extraer datos
+        $idProducto = $_POST['btnGuardarDatos'];
+        $producto = $_POST['txtProducto'];
+        $categoria = $_POST['opcCategoria'];
+        $precio = $_POST['txtPrecio'];
+        $cantidad = $_POST['txtCantidad'];
+        if(verificarCamposVacios($producto) && !verificarCaracteresEspeciales($producto)){
+            if(verificarCamposVacios($categoria)){
+                if(verificarCamposVacios($precio)){
+                    if(verificarCamposVacios($cantidad)){
+                        $modeloProducto = new producto();
+                        if (!$modeloProducto->verificarProductoPorNombreEditar($producto, $idProducto)) {
+                            $objControlGestionarProducto = new controlGestionarProducto;
+                            $objControlGestionarProducto->guardarEditarProducto($idProducto,$producto,$precio,$cantidad,$categoria);
+                            $objControlGestionarProducto->listarProductosCategoria();
+                            $objMensajeSistema = new mensajeSistema();
+                            $objMensajeSistema->mensajeSistemaShow("Datos Actualizados Correctamente", "getGestionarProductos.php", suceso:true);
+                        }else{
+                            $objControlGestionarProducto = new controlGestionarProducto;
+                            $objControlGestionarProducto->editarProducto($idProducto);
+                            $objMensajeSistema = new mensajeSistema();
+                            $objMensajeSistema->mensajeSistemaShow("El producto ya existe", "getGestionarProductos.php");
+                        }    
+                    }else{
+                        $objControlGestionarProducto = new controlGestionarProducto;
+                        $objControlGestionarProducto->editarProducto($idProducto);
+                        $objMensajeSistema = new mensajeSistema();
+                        $objMensajeSistema->mensajeSistemaShow("Ingresa la cantidad del producto", "getGestionarProductos.php");
+                    }
+                }else{
+                    $objControlGestionarProducto = new controlGestionarProducto;
+                    $objControlGestionarProducto->editarProducto($idProducto);
+                    $objMensajeSistema = new mensajeSistema();
+                    $objMensajeSistema->mensajeSistemaShow("Ingresa el precio del producto", "getGestionarProductos.php");
+                }
+            }else{
+                $objControlGestionarProducto = new controlGestionarProducto;
+                $objControlGestionarProducto->editarProducto($idProducto);
+                $objMensajeSistema = new mensajeSistema();
+                $objMensajeSistema->mensajeSistemaShow("Seleccione la categoria", "getGestionarProductos.php");
+            }
+        }else{
+            $objControlGestionarProducto = new controlGestionarProducto;
+            $objControlGestionarProducto->editarProducto($idProducto);
+            $objMensajeSistema = new mensajeSistema();
+            $objMensajeSistema->mensajeSistemaShow("Ingrese el nombre del producto y/o verifique que no tenga caracteres especiales", "getGestionarProductos.php");
+        }
+
+    }
+    else if(validaBoton($btnEliminar)){
+        $idProducto = $_POST['btnEliminar'];
+        $objControlGestionarProducto = new controlGestionarProducto;
+        $objControlGestionarProducto->eliminarProducto($idProducto);
+        $objMensajeSistema = new mensajeSistema();
+        $objMensajeSistema->mensajeSistemaShow("Se elimino de la lista correctamente", "getGestionarProductos.php",suceso:true);
+        
+    }else{
+        mostrarMensaje("Acceso denegado. Se detectó un intento de acceso ilegal.");
+        exit;
     }
 ?>

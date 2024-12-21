@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 // Verifica si el usuario está autenticado
 function verificarSesion() {
