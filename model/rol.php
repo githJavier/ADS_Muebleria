@@ -1,24 +1,32 @@
 <?php 
 include_once("Conecta.php");
 class rol{
-    public function obtenerRol($usuario){
+    public function obtenerRol($usuario) {
         $conexion = Conecta::conectarBD();
         $sql = "
         SELECT rol.nombre_rol
         FROM usuariorol
         INNER JOIN usuario ON usuariorol.idUsuario = usuario.idUsuario
         INNER JOIN rol ON usuariorol.idRol = rol.idRol
-        WHERE usuario.nombre = '$usuario';";
-        $resultado = mysqli_query($conexion, $sql);
-        if (mysqli_num_rows($resultado) > 0) {
-            $fila = mysqli_fetch_assoc($resultado);
+        WHERE usuario.nombreUsuario = ?";
+        
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $usuario); // "s" indica que el parámetro es una cadena
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+    
+        if ($resultado->num_rows > 0) {
+            $fila = $resultado->fetch_assoc();
             $rol = $fila['nombre_rol'];
         } else {
             $rol = null;
         }
+    
+        $stmt->close();
         Conecta::desConectaBD();
         return $rol;
     }
+    
 
 
     // 

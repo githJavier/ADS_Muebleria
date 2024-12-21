@@ -83,12 +83,14 @@ include_once("../../shared/mensajeVulnerabilidadSistema.php");
                             $objControlGestionarProducto = new controlGestionarProducto;
                             $objControlGestionarProducto->listarProductosCategoria();
                             $objMensajeSistema = new mensajeSistema();
-                            $objMensajeSistema->mensajeSistemaShow("Producto agregado Correctamente", "getGestionarProductos.php", suceso:true);
+                            $objMensajeSistema->mensajeSistemaShow("El producto fue agregado correctamente", "getGestionarProductos.php", suceso:true);
+                            
                         }else{
                             $objAgregar = new controlGestionarProducto();
                             $objAgregar->agregarProducto();
                             $objMensajeSistema = new mensajeSistema();
                             $objMensajeSistema->mensajeSistemaShow("El producto ya existe", "getGestionarProductos.php");
+                            
 
                         }
                     }else{

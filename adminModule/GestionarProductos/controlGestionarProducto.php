@@ -35,18 +35,13 @@ include_once("../../model/ProductoCategoria.php");
             $modeloProducto = new producto();
             if ($modeloProducto->verificarProductoPorNombre($producto)) {
                 return false;
-            }      
-            $idProducto = $modeloProducto->crearProducto($codigo, $producto, $precio, $cantidad);
-            if (!$idProducto) {
-                return false;
-            }
-    
-            $modeloProductoCategoria = new ProductoCategoria();
-            $categoriaAsignada = $modeloProductoCategoria->asignarCategoria($idProducto, $categoria);
-            if (!$categoriaAsignada) {
-                return false;
-            }
-            
+            } 
+            else{
+                $idProducto = $modeloProducto->crearProducto($codigo, $producto, $precio, $cantidad);
+                $modeloProductoCategoria = new ProductoCategoria();
+                $modeloProductoCategoria->asignarCategoria($idProducto, $categoria);
+                return true;
+            }    
         }
         public function editarProducto($idProducto){
             $objProducto = new producto;
