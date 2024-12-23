@@ -12,6 +12,8 @@ class privilegio {
             while ($fila = mysqli_fetch_assoc($resultado)) {
                 $privilegios[] = $fila;
             }
+        } else {
+            throw new Exception("Error en la consulta: " . mysqli_error($conexion));
         }
 
         Conecta::desConectaBD();
@@ -19,7 +21,6 @@ class privilegio {
     }
 
     public function validarPrivilegioExistente($idPrivilegio) {
-        include_once 'conexion.php'; // Asegúrate de que esto apunta correctamente a tu conexión
         $conexion = Conecta::conectarBD();
         $sql = "SELECT COUNT(*) AS total FROM privilegio WHERE idPrivilegio = ?";
         $stmt = $conexion->prepare($sql);

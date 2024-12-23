@@ -32,12 +32,21 @@ class UsuarioPrivilegio
         return $fila;
     }
 
-    public function asignarPrivilegio($idUsuario, $idPrivilegio) {
+    public function asignarPrivilegio($idUsuario, $idPrivilegio)
+    {
         $conexion = Conecta::conectarBD();
         $sql = "INSERT INTO usuarioPrivilegio (idUsuario, idPrivilegio) VALUES ($idUsuario, $idPrivilegio)";
-        mysqli_query($conexion, $sql);
-        Conecta::desConectaBD();
+
+        // Ejecutar la consulta
+        if (mysqli_query($conexion, $sql)) {
+            Conecta::desConectaBD();
+            return true; // Inserción exitosa
+        } else {
+            Conecta::desConectaBD();
+            return false; // Error en la inserción
+        }
     }
+
 
     public function obtenerPrivilegiosPorUsuario($idUsuario) {
         $conexion = Conecta::conectarBD();
@@ -56,11 +65,31 @@ class UsuarioPrivilegio
     }
 
 
-    public function eliminarPrivilegiosPorUsuario($idUsuario) {
+    public function eliminarPrivilegiosPorUsuario($idUsuario)
+    {
+        // Validar el ID del usuario
+        if (!is_numeric($idUsuario) || $idUsuario <= 0) {
+            die("El ID de usuario proporcionado no es válido.");
+        }
+
+        // Conectar a la base de datos
         $conexion = Conecta::conectarBD();
+        if (!$conexion) {
+            die("Error al conectar con la base de datos: " . mysqli_connect_error());
+        }
+
+        // Preparar y ejecutar la consulta para eliminar privilegios
         $sql = "DELETE FROM usuarioPrivilegio WHERE idUsuario = $idUsuario";
-        mysqli_query($conexion, $sql);
-        Conecta::desConectaBD();
+
+        // Ejecutar la consulta directamente
+        if (mysqli_query($conexion, $sql)) {
+            Conecta::desConectaBD();
+            return true; // Eliminación exitosa
+        } else {
+            Conecta::desConectaBD();
+            die("Error al eliminar privilegios: " . mysqli_error($conexion)); // Mejor manejo de errores
+        }
     }
+
 }
 ?>

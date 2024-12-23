@@ -13,7 +13,7 @@ class ControlGUP {
     }
     
     public function obtenerListaGUP() {
-        include '../../model/usuario.php';
+        include '../../model/Usuario.php';
         $objUsuario = new usuario();
         $listaUsuarios = $objUsuario->listarUsuariosParaGestion();
 
@@ -216,7 +216,7 @@ class ControlGUP {
     
 
     public function eliminarUsuario($idUsuario) {
-        include '../../model/usuario.php';
+        include_once '../../model/Usuario.php';
         include '../../model/usuariorol.php';
         include '../../model/UsuarioPrivilegio.php';
     

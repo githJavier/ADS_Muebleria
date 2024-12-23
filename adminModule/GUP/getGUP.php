@@ -98,8 +98,6 @@ if (validaBoton($btnGUP)) {
     $roles = $_POST['roles'] ?? [];
     $privilegios = $_POST['privilegios'] ?? [];
 
-    
-
     if (validarNombre($nombre)) {
         if (validarNombre($apellido)) {
             if (validarCorreo($correo)) {
@@ -172,8 +170,7 @@ if (validaBoton($btnGUP)) {
     $idUsuario = $_POST['idUsuario'] ?? null;
 
     if (validarIdUsuario($idUsuario)) {
-        // Obtener el ID del usuario actual en sesión
-        include '../../model/usuario.php';
+        include_once '../../model/Usuario.php';
         $objUsuario = new usuario();
         $idUsuarioSesion = $objUsuario->obtenerIdUsuarioPorNombre($_SESSION['usuario']);
 
@@ -276,8 +273,7 @@ if (validaBoton($btnGUP)) {
     $idUsuario = $_POST['idUsuario'] ?? null;
 
     if (validarIdUsuario($idUsuario)) {
-        // Obtener el ID del usuario actual en sesión
-        include '../../model/usuario.php';
+        include_once '../../model/Usuario.php';
         $objUsuario = new usuario();
         $idUsuarioSesion = $objUsuario->obtenerIdUsuarioPorNombre($_SESSION['usuario']);
 

@@ -4,7 +4,6 @@ include '../../securityModule/panelPrincipalUsuario.php';
 
 class formAgregarUsuario {
     public function formAgregarUsuarioShow($roles, $privilegios) {
-        session_start();
         $usuario = $_SESSION['usuario'];
         $listarprivilegios = $_SESSION['listarprivilegios'];
         $rol = $_SESSION['rol'];
@@ -25,7 +24,7 @@ class formAgregarUsuario {
 
         <!-- Contenido principal -->
         <div class="flex-1 bg-white p-8 ml-80 relative">
-            <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12"> 
                 <div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-8">
                     <h1 class="text-2xl font-bold text-gray-900 text-center mb-8">Registro de Nuevo Usuario 👤</h1>
                     

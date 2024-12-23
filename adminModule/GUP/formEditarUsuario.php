@@ -30,7 +30,7 @@ class formEditarUsuario {
                                 <label for="txtApellido" class="block text-sm font-medium text-gray-700">Primer Apellido</label>
                                 <input type="text" id="txtApellido" name="txtApellido" value="<?php echo htmlspecialchars($usuario['apellido']); ?>" required class="shadow-sm focus:ring-custom focus:border-custom block w-full sm:text-sm border-gray-300 !rounded-button">
                             </div>
-                            <div>
+                            <div> 
                                 <label for="txtCorreo" class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
                                 <input type="email" id="txtCorreo" name="txtCorreo" value="<?php echo htmlspecialchars($usuario['correo']); ?>" required class="shadow-sm focus:ring-custom focus:border-custom block w-full sm:text-sm border-gray-300 !rounded-button">
                             </div>

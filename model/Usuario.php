@@ -1,6 +1,6 @@
 <?php
 include_once("Conecta.php");
-class usuario
+class Usuario
 {
     public function validarUsuario($usuario)
     {
@@ -143,7 +143,6 @@ class usuario
     }
 
     public function obtenerIdUsuarioPorNombre($nombreUsuario) {
-        include 'conexion.php';
         $conexion = Conecta::conectarBD();
     
         $sql = "SELECT idUsuario FROM usuario WHERE nombreUsuario = ?";
