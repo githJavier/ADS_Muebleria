@@ -38,7 +38,7 @@ class controlVisualizarVenta {
             $objFormVisualizarBoleta = new formVisualizarVenta;
             $objFormVisualizarBoleta->formVisualizarVentaShow(null);
             $objMensajeSistema = new mensajeSistema();
-            $objMensajeSistema->mensajeSistemaShow("Boleta ya despachada", "getVisualizarVenta.php");
+            $objMensajeSistema->mensajeSistemaShow("Boleta ya entrada", "getVisualizarVenta.php");
         }
     }
 }

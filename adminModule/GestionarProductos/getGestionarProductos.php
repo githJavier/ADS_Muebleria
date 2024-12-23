@@ -61,7 +61,7 @@ include_once("../../shared/mensajeVulnerabilidadSistema.php");
             $objControlGestionarProducto->listarProductosCategoria();
 
             $objMensajeSistema = new mensajeSistema();
-            $objMensajeSistema->mensajeSistemaShow("Ingrese id o nombre de producto válido", "getGestionarProductos.php");
+            $objMensajeSistema->mensajeSistemaShow("Ingrese codigo o nombre de producto válido", "getGestionarProductos.php");
         }
     }elseif (validaBoton($btnAgregarProducto)) {
         $objAgregar = new controlGestionarProducto();

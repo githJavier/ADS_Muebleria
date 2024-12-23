@@ -16,10 +16,14 @@ include_once("../../model/ProductoCategoria.php");
         public function listarBusquedaProductosCategoria($txtBuscarProducto) {
             $objProducto = new producto();
             $listaProductos = $objProducto->buscarProductosConCategoria($txtBuscarProducto);
-            $categoria = new Categoria();
-            $listaCategorias = $categoria->listarCategoria();
-            $form = new formGestionarProducto();
-            $form->formGestionarProductoShow($listaProductos, $listaCategorias);
+            $objMensajeSistema = new mensajeSistema();
+            if($listaProductos == null){
+                $this->listarProductosCategoria();
+                $objMensajeSistema->mensajeSistemaShow("Producto no encontrado.", "getGestionarProductos.php");
+            }else{
+                $form = new formGestionarProducto();
+                $form->formGestionarProductoShow($listaProductos);
+            }
         }
         public function agregarProducto() {
             
