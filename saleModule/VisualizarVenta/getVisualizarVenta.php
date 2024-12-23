@@ -34,8 +34,10 @@ $btnDespacharBoleta = $_POST['btnDespacharBoleta'] ?? null;
 
 
 if (validaBoton($btnVisualizarVenta)) {
-    $objControlVisualizarVenta = new formVisualizarVenta;
-    $objControlVisualizarVenta->formVisualizarVentaShow(null);
+    if(verificarSesionIniciada()){
+        $objControlVisualizarVenta = new formVisualizarVenta;
+        $objControlVisualizarVenta->formVisualizarVentaShow(null);
+    }
 }else if(validaBoton($btnBuscarBoleta)){
     $txtNumeroBoleta = $_POST['txtCodigoBoleta'];
     if (verificarCamposVacios($txtNumeroBoleta)) {
@@ -54,7 +56,7 @@ if (validaBoton($btnVisualizarVenta)) {
         $objControlVisualizarVenta = new formVisualizarVenta;
         $objControlVisualizarVenta->formVisualizarVentaShow(null);
         $objMensajeSistema = new mensajeSistema();
-        $objMensajeSistema->mensajeSistemaShow("Ingrese id o nombre de producto válido", "getProforma.php");
+        $objMensajeSistema->mensajeSistemaShow("Ingrese numero de boleta", "getProforma.php");
         
     }
 }else if(validaBoton($btnDetalleBoleta)){

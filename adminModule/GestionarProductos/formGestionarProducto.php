@@ -2,7 +2,7 @@
 include_once("../../shared/renderHeader.php");
 include_once("../../securityModule/panelPrincipalUsuario.php");
  class formGestionarProducto{
-    public function formGestionarProductoShow($listaProductos, $listaCategorias){
+    public function formGestionarProductoShow($listaProductos){
         $usuario = $_SESSION['usuario'];
         $listarprivilegios = $_SESSION['listarprivilegios'];
         $rol = $_SESSION['rol'];
@@ -80,14 +80,20 @@ include_once("../../securityModule/panelPrincipalUsuario.php");
                                         </td>
                                         <td class="py-2 px-4 text-black text-sm">
                                             <div class="flex space-x-4">
-                                                <button class="bg-neutral-800 text-white px-3 py-2 rounded hover:bg-neutral-700">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
-                                                <button class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
+                                                <!-- Botón Editar -->
+                                                <form action="getGestionarProductos.php" method="post">
+                                                    <button type="submit" class="bg-neutral-800 text-white px-3 py-2 rounded hover:bg-neutral-700" name="btnEditar" value="<?php echo $producto['idProducto']; ?>">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </form action="getGestionarProductos.php" method="post">
+                                                <!-- Botón Eliminar -->
+                                                <form action="getGestionarProductos.php" method="post">
+                                                    <button class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600" name="btnEliminar" value="<?php echo $producto['idProducto']?>">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </div>
-                                        </td>      
+                                        </td>                   
                                     </tr>
                                     <?php } ?>
                                 </tbody>

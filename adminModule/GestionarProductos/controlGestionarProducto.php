@@ -3,16 +3,15 @@ include_once("../../model/producto.php");
 include_once("../../model/categoria.php");
 include_once("./formGestionarProducto.php");
 include_once("./formAgregarProducto.php");
+include_once("./formEditarProducto.php");
 include_once("../../shared/mensajeSistema.php");
 include_once("../../model/ProductoCategoria.php");
     class controlGestionarProducto{
         public function listarProductosCategoria(){
             $producto = new Producto();
             $listaProductos = $producto->listarProductosConCategoria();
-            $categoria = new Categoria();
-            $listaCategorias = $categoria->listarCategoria();
             $form = new formGestionarProducto();
-            $form->formGestionarProductoShow($listaProductos, $listaCategorias);
+            $form->formGestionarProductoShow($listaProductos);
         }
         public function listarBusquedaProductosCategoria($txtBuscarProducto) {
             $objProducto = new producto();
@@ -26,9 +25,10 @@ include_once("../../model/ProductoCategoria.php");
             
             $categoriaModel = new categoria();
             $listaCategorias = $categoriaModel->listarCategoria(); 
-
+            $producto = new producto();
+            $codigoNuevo = $producto->crearCodigo();
             $form = new formAgregarProducto;
-            $form->formAgregarProductoShow($listaCategorias);
+            $form->formAgregarProductoShow($listaCategorias, $codigoNuevo);
         }
         public function crearProducto( $codigo, $producto, $categoria, $precio, $cantidad ) {
             // Verificar si el producto ya existe por nombre    
@@ -47,6 +47,28 @@ include_once("../../model/ProductoCategoria.php");
                 return false;
             }
             
+        }
+        public function editarProducto($idProducto){
+            $objProducto = new producto;
+            $producto = $objProducto->buscarProductoId($idProducto);
+            $objCategoria = new categoria;
+            $listaCategorias = $objCategoria->listarCategoria();
+            $objformEditcarCategoria = new formEditarProducto;
+            $objformEditcarCategoria->formEditarProductoShow($producto, $listaCategorias);
+        }
+        public function guardarEditarProducto($idProducto, $producto,$precio, $cantidad, $idCategoria){
+            $objProducto = new producto;
+            $objProducto->actualizarProducto($idProducto, $producto,$precio, $cantidad);
+            $objProductoCategoria = new ProductoCategoria;
+            $objProductoCategoria->actualizarCategoria($idCategoria, $idProducto);
+        }
+
+        public function eliminarProducto($idProducto){
+            $objProducto = new producto;
+            $objProducto->actualizarEstadoProducto($idProducto);
+            $listaProductos = $objProducto->listarProductosConCategoria();
+            $form = new formGestionarProducto();
+            $form->formGestionarProductoShow($listaProductos);
         }
     }
 

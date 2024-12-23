@@ -18,6 +18,21 @@ class privilegio {
         return $privilegios;
     }
 
+    public function validarPrivilegioExistente($idPrivilegio) {
+        include_once 'conexion.php'; // Asegúrate de que esto apunta correctamente a tu conexión
+        $conexion = Conecta::conectarBD();
+        $sql = "SELECT COUNT(*) AS total FROM privilegio WHERE idPrivilegio = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $idPrivilegio);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $fila = $resultado->fetch_assoc();
+        $stmt->close();
+        Conecta::desConectaBD();
+
+        return $fila['total'] > 0;
+    }
+
     
 }
 ?>

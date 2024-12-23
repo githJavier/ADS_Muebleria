@@ -1,7 +1,12 @@
 <?php
+session_start();
 function validaBoton($boton) {
     return isset($boton);
 }
+function verificarSesionIniciada() {
+    return isset($_SESSION['usuario']);
+}
+
 
 function mostrarMensaje($mensaje) {
     include 'ScreenMensaje.php';
@@ -26,6 +31,32 @@ function validarClave($clave) {
     return strlen($clave) >= 3;
 }
 
+function validarTextoConLongitud($texto, $longitudMinima = 3, $longitudMaxima = 100) {
+    $longitud = strlen(trim($texto));
+    return $longitud >= $longitudMinima && $longitud <= $longitudMaxima;
+}
+
+function validarRol($roles) {
+    // Verifica que se haya enviado un único rol
+    return count($roles) === 1;
+}
+
+// Función para validar un array de enteros (roles, privilegios)
+function validarArrayEnteros($array) {
+    foreach ($array as $valor) {
+        if (!ctype_digit($valor)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function validarTextoLetrasEspacios($texto) {
+    return !empty($texto) && preg_match("/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/", $texto);
+}
+
+
+
 function validarIdUsuario($id) {
     // Verifica que esté definido y sea un número entero
     if (isset($id) && ctype_digit($id) && (int)$id > 0) {
@@ -44,9 +75,11 @@ $btnActualizarUsuario = $_POST['btnActualizarUsuario'] ?? null;
 $btnEliminarUsuario = $_POST['btnEliminarUsuario'] ?? null;
 
 if (validaBoton($btnGUP)) {
-    include 'controlGUP.php';
-    $objControlGUP = new ControlGUP();
-    $objControlGUP->obtenerListaGUP();
+    if(verificarSesionIniciada()){
+        include 'controlGUP.php';
+        $objControlGUP = new ControlGUP();
+        $objControlGUP->obtenerListaGUP();
+    }
 } else if (validaBoton($btnAgregarUsuario)) {
     include 'controlGUP.php';
     $objControlGUP = new ControlGUP();
@@ -65,16 +98,63 @@ if (validaBoton($btnGUP)) {
     $roles = $_POST['roles'] ?? [];
     $privilegios = $_POST['privilegios'] ?? [];
 
+    
+
     if (validarNombre($nombre)) {
         if (validarNombre($apellido)) {
             if (validarCorreo($correo)) {
                 if (validarTelefono($telefono)) {
-                    if (validarClave($clave)) {
-                        include 'controlGUP.php';
-                        $objControlGUP = new ControlGUP();
-                        $objControlGUP->crearUsuario($nombre, $apellido, $correo, $telefono, $nombreUsuario, $clave, $estado, $preguntaSeguridad, $respuestaSeguridad, $roles, $privilegios);
+                    if (validarNombre($nombreUsuario)) {
+                        if (validarClave($clave)) {
+                            if (validarTextoLetrasEspacios($preguntaSeguridad)) {
+                                if (validarTextoConLongitud($preguntaSeguridad, 3, 100)) {
+                                    if (validarTextoLetrasEspacios($respuestaSeguridad)) {
+                                        if (validarTextoConLongitud($respuestaSeguridad, 3, 100)) {
+                                            if (validarArrayEnteros($roles)) {
+                                                if (validarRol($roles)) {
+                                                    if (validarArrayEnteros($privilegios)) {
+                                                        include 'controlGUP.php';
+                                                        
+                                                        $objControlGUP = new ControlGUP();
+                                                        $objControlGUP->crearUsuario(
+                                                            $nombre,
+                                                            $apellido,
+                                                            $correo,
+                                                            $telefono,
+                                                            $nombreUsuario,
+                                                            $clave,
+                                                            $estado,
+                                                            $preguntaSeguridad,
+                                                            $respuestaSeguridad,
+                                                            $roles,
+                                                            $privilegios
+                                                        );
+                                                    } else {
+                                                        mostrarMensaje("Los privilegios seleccionados no son válidos.");
+                                                    }
+                                                } else {
+                                                    mostrarMensaje("Accion de rol no permitida");
+                                                }
+                                            } else {
+                                                mostrarMensaje("Los roles seleccionados no son válidos.");
+                                            }
+                                        } else {
+                                            mostrarMensaje("La respuesta de seguridad debe tener entre 10 y 100 caracteres.");
+                                        }
+                                    } else {
+                                        mostrarMensaje("La respuesta de seguridad solo puede contener letras y espacios.");
+                                    }
+                                } else {
+                                    mostrarMensaje("La pregunta de seguridad debe tener entre 10 y 100 caracteres.");
+                                }
+                            } else {
+                                mostrarMensaje("La pregunta de seguridad solo puede contener letras y espacios.");
+                            }
+                        } else {
+                            mostrarMensaje("La contraseña debe tener al menos 5 caracteres.");
+                        }
                     } else {
-                        mostrarMensaje("La contraseña debe tener al menos 5 caracteres.");
+                        mostrarMensaje("El nombre de usuario no es válido.");
                     }
                 } else {
                     mostrarMensaje("El teléfono debe tener 9 dígitos.");
@@ -91,10 +171,19 @@ if (validaBoton($btnGUP)) {
 } else if (validaBoton($btnEditarUsuario)) {
     $idUsuario = $_POST['idUsuario'] ?? null;
 
-    if ($idUsuario) {
-        include 'controlGUP.php';
-        $objControlGUP = new ControlGUP();
-        $objControlGUP->mostrarFormularioEditarUsuario($idUsuario);
+    if (validarIdUsuario($idUsuario)) {
+        // Obtener el ID del usuario actual en sesión
+        include '../../model/usuario.php';
+        $objUsuario = new usuario();
+        $idUsuarioSesion = $objUsuario->obtenerIdUsuarioPorNombre($_SESSION['usuario']);
+
+        if ($idUsuarioSesion == $idUsuario) {
+            mostrarMensaje("No puedes editar tu propia cuenta desde el menú de gestión.");
+        } else {
+            include 'controlGUP.php';
+            $objControlGUP = new controlGUP();
+            $objControlGUP->mostrarFormularioEditarUsuario($idUsuario);
+        }
     } else {
         mostrarMensaje("Error: No se proporcionó un ID de usuario válido.");
     }
@@ -114,36 +203,91 @@ if (validaBoton($btnGUP)) {
     $privilegios = $_POST['privilegios'] ?? [];
 
     // Validar los datos
-    if (validarNombre($nombre) && validarNombre($apellido)) {
-        if (validarCorreo($correo)) {
-            if (validarTelefono($telefono)) {
-                if (empty($clave) || validarClave($clave)) {
-                    include 'controlGUP.php';
-                    $objControlGUP = new ControlGUP();
-                    $objControlGUP->actualizarUsuario($idUsuario, $nombre, $apellido, $correo, $telefono, $nombreUsuario, $clave, $estado, $preguntaSeguridad, $respuestaSeguridad, $roles, $privilegios);
+    if (validarIdUsuario($idUsuario)) {
+        if (validarNombre($nombre)) {
+            if (validarNombre($apellido)) {
+                if (validarCorreo($correo)) {
+                    if (validarTelefono($telefono)) {
+                        if (empty($clave) || validarClave($clave)) {
+                            if (validarTextoLetrasEspacios($preguntaSeguridad)) {
+                                if (validarTextoConLongitud($preguntaSeguridad, 3, 100)) {
+                                    if (validarTextoLetrasEspacios($respuestaSeguridad)) {
+                                        if (validarTextoConLongitud($respuestaSeguridad, 3, 100)) {
+                                            if (validarArrayEnteros($roles)) {
+                                                if (validarRol($roles)) {
+                                                    if (validarArrayEnteros($privilegios)) {
+                                                        // Todo es válido, proceder con la actualización
+                                                        include 'controlGUP.php';
+                                                        $objControlGUP = new ControlGUP();
+                                                        $objControlGUP->actualizarUsuario(
+                                                            $idUsuario,
+                                                            $nombre,
+                                                            $apellido,
+                                                            $correo,
+                                                            $telefono,
+                                                            $nombreUsuario,
+                                                            $clave,
+                                                            $estado,
+                                                            $preguntaSeguridad,
+                                                            $respuestaSeguridad,
+                                                            $roles,
+                                                            $privilegios
+                                                        );
+                                                    } else {
+                                                        mostrarMensaje("Los privilegios seleccionados no son válidos.");
+                                                    }
+                                                } else {
+                                                    mostrarMensaje("Debe seleccionar un único rol válido.");
+                                                }
+                                            } else {
+                                                mostrarMensaje("Los roles seleccionados no son válidos.");
+                                            }
+                                        } else {
+                                            mostrarMensaje("La respuesta de seguridad debe tener entre 3 y 100 caracteres.");
+                                        }
+                                    } else {
+                                        mostrarMensaje("La respuesta de seguridad solo puede contener letras y espacios.");
+                                    }
+                                } else {
+                                    mostrarMensaje("La pregunta de seguridad debe tener entre 3 y 100 caracteres.");
+                                }
+                            } else {
+                                mostrarMensaje("La pregunta de seguridad solo puede contener letras y espacios.");
+                            }
+                        } else {
+                            mostrarMensaje("La contraseña debe tener al menos 3 caracteres.");
+                        }
+                    } else {
+                        mostrarMensaje("El teléfono debe tener 9 dígitos.");
+                    }
                 } else {
-                    mostrarMensaje("La contraseña debe tener al menos 5 caracteres.");
+                    mostrarMensaje("El correo electrónico no es válido.");
                 }
             } else {
-                mostrarMensaje("El teléfono debe tener 9 dígitos.");
+                mostrarMensaje("El apellido no es válido.");
             }
         } else {
-            mostrarMensaje("El correo electrónico no es válido.");
+            mostrarMensaje("El nombre no es válido.");
         }
     } else {
-        // mostrarMensaje("El nombre o apellido estan vacios");
-        // mostrarMensaje("El nombre o apellido es muy corto");
-        mostrarMensaje("El nombre o apellido no es válido.");
+        mostrarMensaje("Error: ID de usuario no válido.");
     }
 } else if (validaBoton($btnEliminarUsuario)) {
-
-    //
     $idUsuario = $_POST['idUsuario'] ?? null;
 
     if (validarIdUsuario($idUsuario)) {
-        include 'controlGUP.php';
-        $objControlGUP = new ControlGUP();
-        $objControlGUP->eliminarUsuario($idUsuario);
+        // Obtener el ID del usuario actual en sesión
+        include '../../model/usuario.php';
+        $objUsuario = new usuario();
+        $idUsuarioSesion = $objUsuario->obtenerIdUsuarioPorNombre($_SESSION['usuario']);
+
+        if ($idUsuarioSesion == $idUsuario) {
+            mostrarMensaje("No puedes eliminar tu propia cuenta.");
+        } else {
+            include 'controlGUP.php';
+            $objControlGUP = new ControlGUP();
+            $objControlGUP->eliminarUsuario($idUsuario);
+        }
     } else {
         mostrarMensaje("Error: No se proporcionó un ID de usuario válido para eliminar.");
     }

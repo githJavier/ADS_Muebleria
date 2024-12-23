@@ -53,6 +53,19 @@ public function asignarCategoria($idProducto, $idCategoria)
     Conecta::desConectaBD();
     return $resultado;
 }
+public function actualizarCategoria($idCategoria, $idProducto){
+    $conexion = Conecta::conectarBD();
+    $sql = "UPDATE productocategoria SET idcategoria = ? WHERE idProducto = ?;";
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("ii", $idCategoria, $idProducto);
+    $stmt->execute();
+    $respuesta = $stmt->affected_rows > 0;
+    $stmt->close();
+    Conecta::desConectaBD();
+    return $respuesta;
+}
+
+
 
 
 }

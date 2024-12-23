@@ -11,7 +11,6 @@ class formEditarUsuario {
         $panelPrincipal = new PanelPrincipalUsuario;
 
         ?>
-
         <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="max-w-3xl mx-auto bg-white shadow rounded-lg p-8">
                 <h1 class="text-2xl font-bold text-gray-900 text-center mb-8">Editar Usuario</h1>
@@ -82,7 +81,7 @@ class formEditarUsuario {
                             <div class="mt-4 space-y-4">
                                 <?php foreach ($roles as $rol): ?>
                                     <div class="flex items-center">
-                                        <input type="checkbox" name="roles[]" value="<?php echo $rol['idRol']; ?>" <?php echo in_array($rol['idRol'], $rolesAsignados) ? 'checked' : ''; ?> class="h-4 w-4 text-custom focus:ring-custom border-gray-300 !rounded">
+                                        <input type="radio" name="roles[]" value="<?php echo $rol['idRol']; ?>" <?php echo in_array($rol['idRol'], $rolesAsignados) ? 'checked' : ''; ?> class="h-4 w-4 text-custom focus:ring-custom border-gray-300 !rounded">
                                         <label class="ml-3 text-sm text-gray-700"><?php echo htmlspecialchars($rol['nombre_rol']); ?></label>
                                     </div>
                                 <?php endforeach; ?>

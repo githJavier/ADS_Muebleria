@@ -4,8 +4,7 @@ include_once("../../securityModule/panelPrincipalUsuario.php");
 
 class formGUP {
     public function formGUPShow($listaUsuarios) {
-        session_start();
-        $usuario = $_SESSION['usuario'];
+        $usuarioSesion = $_SESSION['usuario']; // Usuario actual en sesión
         $listarprivilegios = $_SESSION['listarprivilegios'];
         $rol = $_SESSION['rol'];
         $objCabecera = new renderHeader;
@@ -18,7 +17,7 @@ class formGUP {
                 <!-- Panel lateral fijo -->
                 <div class="w-80 bg-neutral-800 p-6 flex flex-col justify-between shadow-lg fixed h-full">
                     <div>
-                        <?php $panelPrincipal->perfilUsuario($usuario, $rol, $listarprivilegios); ?>
+                        <?php $panelPrincipal->perfilUsuario($usuarioSesion, $rol, $listarprivilegios); ?>
                     </div>
                     <?php $panelPrincipal->formCerrarSesion("../../securityModule/cerrarSesion.php"); ?>
                 </div>
@@ -68,22 +67,26 @@ class formGUP {
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap flex items-center space-x-2">
-                                                <form method="POST" action="getGUP.php">
-                                                <input type="hidden" name="idUsuario" value="<?php echo $usuario['idUsuario']; ?>">
-                                                    <button 
-                                                    name="btnEditarUsuario" value="btnEditarUsuario"
-                                                    class="bg-neutral-800 text-white px-3 py-2 rounded hover:bg-neutral-700">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                </form>
-                                                <form method="POST" action="getGUP.php">
-                                                    <input type="hidden" name="idUsuario" value="<?php echo $usuario['idUsuario']; ?>">
-                                                    <button
-                                                    name="btnEliminarUsuario" value="btnEliminarUsuario"
-                                                    class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>                                      
-                                                </form>
+                                                <?php if ($usuario['nombreUsuario'] !== $usuarioSesion): ?>
+                                                    <form method="POST" action="getGUP.php">
+                                                        <input type="hidden" name="idUsuario" value="<?php echo $usuario['idUsuario']; ?>">
+                                                        <button 
+                                                        name="btnEditarUsuario" value="btnEditarUsuario"
+                                                        class="bg-neutral-800 text-white px-3 py-2 rounded hover:bg-neutral-700">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                    </form>
+                                                    <form method="POST" action="getGUP.php">
+                                                        <input type="hidden" name="idUsuario" value="<?php echo $usuario['idUsuario']; ?>">
+                                                        <button
+                                                        name="btnEliminarUsuario" value="btnEliminarUsuario"
+                                                        class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>                                      
+                                                    </form>
+                                                <?php else: ?>
+                                                    <span class="text-gray-500 text-sm italic">Acciones deshabilitadas</span>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

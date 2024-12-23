@@ -141,6 +141,51 @@ class usuario
 
         return $numFilas === 1;
     }
+
+    public function obtenerIdUsuarioPorNombre($nombreUsuario) {
+        include 'conexion.php';
+        $conexion = Conecta::conectarBD();
+    
+        $sql = "SELECT idUsuario FROM usuario WHERE nombreUsuario = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param('s', $nombreUsuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+    
+        $idUsuario = null;
+        if ($fila = $resultado->fetch_assoc()) {
+            $idUsuario = $fila['idUsuario'];
+        }
+    
+        $stmt->close();
+        Conecta::desConectaBD();
+        return $idUsuario;
+    }
+
+    // Método para iniciar una transacción
+    public function iniciarTransaccion() {
+        $conexion = Conecta::conectarBD();
+        if (!$conexion->begin_transaction()) {
+            throw new Exception("Error al iniciar la transacción: " . $conexion->error);
+        }
+    }
+
+    // Método para confirmar una transacción
+    public function confirmarTransaccion() {
+        $conexion = Conecta::conectarBD();
+        if (!$conexion->commit()) {
+            throw new Exception("Error al confirmar la transacción: " . $conexion->error);
+        }
+    }
+
+    // Método para revertir una transacción
+    public function revertirTransaccion() {
+        $conexion = Conecta::conectarBD();
+        if (!$conexion->rollback()) {
+            throw new Exception("Error al revertir la transacción: " . $conexion->error);
+        }
+    }
+    
     
     
 }

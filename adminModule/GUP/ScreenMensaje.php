@@ -73,7 +73,6 @@ class ScreenMensaje {
                         <form method="POST" action="<?php echo $ruta ?>">
                             <button 
                             name="btnGUP"
-                            type="submit"
                             class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 !rounded-button transition duration-200 ease-in-out w-full mb-4">
                                 Aceptar
                             </button>

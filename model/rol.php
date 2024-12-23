@@ -38,6 +38,20 @@ class rol{
         return $roles;
     }
 
+    public function validarRolExistente($idRol) {
+        $conexion = Conecta::conectarBD();
+        $sql = "SELECT COUNT(*) AS total FROM rol WHERE idRol = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("i", $idRol);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $fila = $resultado->fetch_assoc();
+        $stmt->close();
+        Conecta::desConectaBD();
+
+        return $fila['total'] > 0;
+    }
+
     public function asignarRol($idUsuario, $idRol) {
         $conexion = Conecta::conectarBD();
         $sql = "INSERT INTO usuariorol (idUsuario, idRol) VALUES ($idUsuario, $idRol)";

@@ -5,7 +5,6 @@ include_once("../../model/detalle_boleta.php");
 include_once("./formEmitirBoleta.php");
 include_once("./formEmitirBoletaVenta.php");
 include_once("./formVerBoleta.php");
-include_once("../../shared/mensajeSistema.php");
 include_once("../../model/producto.php");
     class ControlEmitirBoleta{
         public function listarProformas() {
@@ -17,8 +16,15 @@ include_once("../../model/producto.php");
         public function listarBusquedaProformas($txtBuscarProforma) {
             $objProducto = new proforma();
             $listaProformas = $objProducto->obtenerProformasBusqueda($txtBuscarProforma);
-            $objFormEmitirProforma = new formEmitirBoleta();
-            $objFormEmitirProforma->formEmitirBoletaShow($listaProformas);
+            if($listaProformas != null){
+                $objFormEmitirProforma = new formEmitirBoleta();
+                $objFormEmitirProforma->formEmitirBoletaShow($listaProformas);
+            }else if($listaProformas == null){
+                $this->listarProformas();
+                $objMensajeSistema = new mensajeSistema();
+                $objMensajeSistema->mensajeSistemaShow("Proforma no encontrada o ya atendida", "getBoleta.php");
+            }
+            
         }
         public function verDetalleProforma($idProforma){
             $objproforma = new proforma;

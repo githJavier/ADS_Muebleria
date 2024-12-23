@@ -79,7 +79,7 @@ if (validaBoton($btnEmitirProforma)) {
         $objFormEmitirProforma->formEmitirProformaShow($listaProductos);
 
         $objMensajeSistema = new mensajeSistema();
-        $objMensajeSistema->mensajeSistemaShow("Ingrese id o nombre de producto válido", "getProforma.php");
+        $objMensajeSistema->mensajeSistemaShow("Ingrese codigo o nombre de producto válido", "getProforma.php");
     }
 } else if (validaBoton($btnGenerarProforma)) {
     // Capturar los productos seleccionados enviados como JSON
