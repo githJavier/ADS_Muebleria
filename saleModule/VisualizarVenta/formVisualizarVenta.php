@@ -64,12 +64,12 @@ class formVisualizarVenta {
                                     $vendedor = $boleta['cajeroEmitida'];
                                 ?>
                                 <tr class="border-b border-gray-300 hover:bg-gray-100">
-                                    <td class="py-2 px-4 text-black"><?php echo $codigo ?? null; ?></td>
-                                    <td class="py-2 px-4 text-black"><?php echo $estado ?? null; ?></td>
-                                    <td class="py-2 px-4 text-black"><?php echo $monto ?? null; ?></td>
-                                    <td class="py-2 px-4 text-black"><?php echo $fecha ?? null; ?></td>
-                                    <td class="py-2 px-4 text-black"><?php echo $hora ?? null; ?></td>
-                                    <td class="py-2 px-4 text-black"><?php echo $vendedor ?? null; ?></td>
+                                    <td class="py-2 px-4 text-black" name="txtCodigo"><?php echo $codigo ?? null; ?></td>
+                                    <td class="py-2 px-4 text-black" name="txtEstado"><?php echo $estado ?? null; ?></td>
+                                    <td class="py-2 px-4 text-black" name="txtMonto"><?php echo $monto ?? null; ?></td>
+                                    <td class="py-2 px-4 text-black" name="txtFecha"><?php echo $fecha ?? null; ?></td>
+                                    <td class="py-2 px-4 text-black" name="txtHora"><?php echo $hora ?? null; ?></td>
+                                    <td class="py-2 px-4 text-black" name="txtVendedor"><?php echo $vendedor ?? null; ?></td>
                                     <td class="py-2 px-4 text-black">
                                         <form action="./getVisualizarVenta.php" method="post">
                                             <input type="text" name="txtIdBoleta" value="<?php echo $idBoleta?>" class="hidden">

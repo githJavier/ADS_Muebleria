@@ -16,10 +16,14 @@ include_once("../../model/ProductoCategoria.php");
         public function listarBusquedaProductosCategoria($txtBuscarProducto) {
             $objProducto = new producto();
             $listaProductos = $objProducto->buscarProductosConCategoria($txtBuscarProducto);
-            $categoria = new Categoria();
-            $listaCategorias = $categoria->listarCategoria();
-            $form = new formGestionarProducto();
-            $form->formGestionarProductoShow($listaProductos, $listaCategorias);
+            $objMensajeSistema = new mensajeSistema();
+            if($listaProductos == null){
+                $this->listarProductosCategoria();
+                $objMensajeSistema->mensajeSistemaShow("Producto no encontrado.", "getGestionarProductos.php");
+            }else{
+                $form = new formGestionarProducto();
+                $form->formGestionarProductoShow($listaProductos);
+            }
         }
         public function agregarProducto() {
             
@@ -35,18 +39,13 @@ include_once("../../model/ProductoCategoria.php");
             $modeloProducto = new producto();
             if ($modeloProducto->verificarProductoPorNombre($producto)) {
                 return false;
-            }      
-            $idProducto = $modeloProducto->crearProducto($codigo, $producto, $precio, $cantidad);
-            if (!$idProducto) {
-                return false;
-            }
-    
-            $modeloProductoCategoria = new ProductoCategoria();
-            $categoriaAsignada = $modeloProductoCategoria->asignarCategoria($idProducto, $categoria);
-            if (!$categoriaAsignada) {
-                return false;
-            }
-            
+            } 
+            else{
+                $idProducto = $modeloProducto->crearProducto($codigo, $producto, $precio, $cantidad);
+                $modeloProductoCategoria = new ProductoCategoria();
+                $modeloProductoCategoria->asignarCategoria($idProducto, $categoria);
+                return true;
+            }    
         }
         public function editarProducto($idProducto){
             $objProducto = new producto;
